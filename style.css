@@ -30,6 +30,30 @@ a:hover {
     text-decoration: underline;
 }
 
+.current-highlight {
+    color: var(--accent-color);
+    font-weight: 600;
+    border-bottom: 2px solid rgba(0, 102, 204, 0.35);
+    text-decoration: none;
+}
+
+.current-highlight:hover {
+    color: var(--accent-color);
+    border-bottom-color: rgba(0, 102, 204, 0.7);
+    text-decoration: none;
+}
+
+.bio-intro {
+    font-size: 1.12rem;
+    line-height: 1.9;
+    margin-bottom: 18px;
+}
+
+.bio-note {
+    margin-top: 28px;
+    font-style: italic;
+}
+
 .container {
     display: flex;
     max-width: 1200px;
@@ -118,22 +142,32 @@ h3 {
     color: var(--primary-color);
 }
 
+.systems-heading {
+    color: var(--light-text);
+    font-style: italic;
+}
+
 /* News */
 .news-list {
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 .news-list li {
-    margin-bottom: 15px;
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 2px 0;
 }
 
 .news-list .date {
-    font-family: monospace;
-    font-weight: bold;
-    min-width: 90px;
+    font-family: inherit;
+    font-weight: 400;
+    min-width: 82px;
     color: var(--primary-color);
+    flex-shrink: 0;
 }
 
 /* Publications */
@@ -149,6 +183,13 @@ h3 {
     font-weight: 600;
     font-size: 1.1rem;
     margin-bottom: 5px;
+}
+
+.paper-link {
+    font-weight: 400;
+    font-size: 0.95rem;
+    margin-left: 6px;
+    white-space: nowrap;
 }
 
 .pub-authors {
