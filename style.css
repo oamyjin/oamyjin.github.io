@@ -160,7 +160,7 @@ h3 {
 
 .news-list li {
     display: flex;
-    gap: 10px;
+    gap: 0.5em;
     align-items: flex-start;
     padding: 2px 0;
 }
@@ -168,7 +168,7 @@ h3 {
 .news-list .date {
     font-family: inherit;
     font-weight: 400;
-    min-width: 82px;
+    width: 9ch;
     color: var(--primary-color);
     flex-shrink: 0;
 }
