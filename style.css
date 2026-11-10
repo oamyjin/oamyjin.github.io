@@ -269,6 +269,11 @@ h3 {
     margin: -18px 0 -6px;
 }
 
+.category-systems .category-icon {
+    height: 48px;
+    margin: -12px 0 -4px;
+}
+
 .publication-item {
     display: flex;
     gap: 28px;
