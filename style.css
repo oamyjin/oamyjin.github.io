@@ -531,7 +531,7 @@ h3 {
 }
 
 .interest-easter {
-    flex: 1 1 0;
+    flex: 0 1 120px;
     min-width: 0;
     align-self: stretch;
     display: flex;
