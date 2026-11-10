@@ -428,17 +428,11 @@ h3 {
     color: #1E1F24;
 }
 
-.exp-loc {
+.exp-role {
     font-weight: 400;
     font-size: 0.9rem;
     color: #8a8d93;
     margin-left: 4px;
-}
-
-.exp-role {
-    font-style: italic;
-    font-weight: 600;
-    color: #333;
 }
 
 .exp-date {
