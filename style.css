@@ -60,10 +60,10 @@ a:hover {
 }
 
 .inline-logo {
-    height: 1.2em;
+    height: 1.45em;
     width: auto;
-    vertical-align: -0.22em;
-    margin-left: 4px;
+    vertical-align: -0.35em;
+    margin: 0 3px 0 1px;
 }
 
 .bio-intro {
