@@ -31,10 +31,11 @@ a:hover {
 }
 
 .current-highlight {
+    --hl: var(--accent-color);
     color: #1E1F24;
     font-weight: 600;
     text-decoration: none;
-    background-image: linear-gradient(var(--accent-color), var(--accent-color));
+    background-image: linear-gradient(var(--hl), var(--hl));
     background-repeat: no-repeat;
     background-position: 0 100%;
     background-size: 0% 1.5px;
@@ -45,9 +46,17 @@ a:hover {
 }
 
 .current-highlight:hover {
-    color: var(--accent-color);
+    color: var(--hl);
     text-decoration: none;
     background-size: 100% 1.5px;
+}
+
+.hl-nyu {
+    --hl: #57068c; /* NYU violet */
+}
+
+.hl-adobe {
+    --hl: #fa0f00; /* Adobe red */
 }
 
 .inline-logo {
