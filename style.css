@@ -221,6 +221,10 @@ h3 {
     background: #f6f3fa;
 }
 
+.category-systems .publication-item:hover {
+    background: #f2f5f9;
+}
+
 .publication-item:last-child {
     border-bottom: none;
 }
