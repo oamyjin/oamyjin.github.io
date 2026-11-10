@@ -50,6 +50,17 @@ a:hover {
     background-size: 100% 1.5px;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
+.inline-logo {
+    height: 1.2em;
+    width: auto;
+    vertical-align: -0.22em;
+    margin: 0 3px 0 1px;
+}
+
 .bio-intro {
     font-size: 1rem;
     line-height: 1.8;
