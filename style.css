@@ -483,12 +483,12 @@ h3 {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    gap: clamp(10px, 3vw, 28px);
+    gap: clamp(8px, 2.4vw, 22px);
     padding: 8px 0 4px;
 }
 
 .interest {
-    flex: 0 1 76px;
+    flex: 0 1 64px;
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -499,7 +499,7 @@ h3 {
 
 .interest img {
     width: 100%;
-    max-width: 76px;
+    max-width: 64px;
     aspect-ratio: 1;
     height: auto;
     object-fit: contain;
@@ -531,7 +531,7 @@ h3 {
 }
 
 .interest-easter {
-    flex: 0 1 120px;
+    flex: 0 1 170px;
     min-width: 0;
     align-self: stretch;
     display: flex;
@@ -542,7 +542,7 @@ h3 {
 
 .interest-easter img {
     width: 100%;
-    max-width: 120px;
+    max-width: 170px;
     height: auto;
     display: block;
     transform: rotate(-2deg);
