@@ -429,17 +429,16 @@ h3 {
 }
 
 .exp-loc {
+    font-weight: 400;
     font-size: 0.9rem;
     color: #8a8d93;
-    white-space: nowrap;
+    margin-left: 4px;
 }
 
 .exp-role {
-    font-size: 0.92rem;
-    font-weight: 600;
     font-style: italic;
+    font-weight: 600;
     color: #333;
-    margin-top: 2px;
 }
 
 .exp-date {
@@ -450,7 +449,7 @@ h3 {
 }
 
 .exp-desc {
-    margin-top: 10px;
+    margin-top: 6px;
     font-size: 0.95rem;
     line-height: 1.6;
     color: rgba(30, 31, 36, 0.85);
