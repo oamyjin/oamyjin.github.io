@@ -161,6 +161,7 @@ a:hover {
 }
 
 .social-links a {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -177,6 +178,26 @@ a:hover {
     max-width: 100%;
     max-height: 100%;
     display: block;
+}
+
+.social-label {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translate(-50%, -4px);
+    white-space: nowrap;
+    font-family: 'Sora', 'Aptos', 'Lato', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #1E1F24;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.social-links a:hover .social-label {
+    opacity: 1;
+    transform: translate(-50%, 0);
 }
 
 /* Main Content */
