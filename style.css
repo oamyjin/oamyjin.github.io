@@ -476,6 +476,74 @@ h3 {
     }
 }
 
+/* Interests */
+.interest-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    padding: 8px 0 4px;
+}
+
+.interest {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: default;
+}
+
+.interest img {
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    display: block;
+    animation: interest-float 3.2s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.6s);
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08));
+    transition: filter 0.3s ease;
+}
+
+.interest:hover img {
+    animation: interest-hop 0.7s ease;
+    filter: drop-shadow(0 8px 10px rgba(87, 6, 140, 0.18));
+}
+
+.interest-label {
+    font-family: 'Sora', 'Aptos', 'Lato', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #1E1F24;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.interest:hover .interest-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes interest-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes interest-hop {
+    0% { transform: translateY(0) rotate(0) scale(1); }
+    30% { transform: translateY(-14px) rotate(-8deg) scale(1.1); }
+    55% { transform: translateY(0) rotate(6deg) scale(1.05); }
+    75% { transform: translateY(-5px) rotate(-3deg) scale(1.08); }
+    100% { transform: translateY(0) rotate(0) scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .interest img,
+    .interest:hover img {
+        animation: none;
+    }
+}
+
 /* Education */
 .edu-item {
     margin-bottom: 20px;
