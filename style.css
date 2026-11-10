@@ -146,11 +146,6 @@ h3 {
     color: var(--primary-color);
 }
 
-.systems-heading {
-    color: var(--light-text);
-    font-style: italic;
-}
-
 /* News */
 .news-list {
     list-style: none;
@@ -174,41 +169,148 @@ h3 {
     flex-shrink: 0;
 }
 
-/* Publications */
-.pub-list {
-    list-style: none;
+/* Publications (layout adapted from julianjuaner.github.io) */
+.publications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.pub-item {
-    margin-bottom: 25px;
+.publications-category {
+    margin-bottom: 2rem;
 }
 
-.pub-title {
+.publications-category:last-child {
+    margin-bottom: 0;
+}
+
+.publications-category-title {
+    font-family: 'Sora', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 1.35rem;
     font-weight: 600;
+    color: #222;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.publication-item {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+    padding: 20px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.publication-item:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.publication-item:last-child {
+    border-bottom: none;
+}
+
+.publication-image {
+    display: block;
+    width: 220px;
+    height: 132px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #fff;
+    padding: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+.publication-item:hover .publication-image {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+}
+
+.publication-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.publication-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.publication-title {
     font-size: 1.1rem;
-    margin-bottom: 5px;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
-.paper-link {
-    font-weight: 400;
+.publication-title a {
+    color: #333;
+}
+
+.publication-title a:hover {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.publication-authors {
     font-size: 0.95rem;
-    margin-left: 6px;
-    white-space: nowrap;
+    color: rgba(30, 31, 36, 0.8);
+    line-height: 1.4;
 }
 
-.pub-authors {
-    color: var(--light-text);
-    margin-bottom: 5px;
+.author-name {
+    font-weight: 700;
+    color: #000;
 }
 
-.pub-venue {
-    font-style: italic;
-    margin-bottom: 5px;
-}
-
-.pub-links a {
+.publication-venue {
     font-size: 0.9rem;
-    margin-right: 10px;
+    color: #000;
+    font-weight: 700;
+    font-family: 'Sora', 'Aptos', 'Lato', sans-serif;
+}
+
+.publication-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 2px;
+    font-size: 0.9rem;
+}
+
+.publication-links a {
+    color: #000;
+    position: relative;
+    padding-bottom: 2px;
+    transition: color 0.3s ease;
+}
+
+.publication-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.publication-links a:hover {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.publication-links a:hover::after {
+    width: 100%;
 }
 
 /* Education */
@@ -247,5 +349,16 @@ h3 {
     .content {
         margin-left: 0;
         padding: 40px 20px;
+    }
+
+    .publication-item {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px 0;
+    }
+
+    .publication-image {
+        width: 100%;
+        height: 200px;
     }
 }
