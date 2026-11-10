@@ -31,22 +31,38 @@ a:hover {
 }
 
 .current-highlight {
-    color: var(--accent-color);
+    color: #1E1F24;
     font-weight: 600;
-    border-bottom: 2px solid rgba(0, 102, 204, 0.35);
+    position: relative;
     text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.current-highlight::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 0;
+    height: 1.5px;
+    background: var(--accent-color);
+    transition: width 0.3s ease;
 }
 
 .current-highlight:hover {
     color: var(--accent-color);
-    border-bottom-color: rgba(0, 102, 204, 0.7);
     text-decoration: none;
 }
 
+.current-highlight:hover::after {
+    width: 100%;
+}
+
 .bio-intro {
-    font-size: 1.12rem;
-    line-height: 1.9;
-    margin-bottom: 18px;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(30, 31, 36, 0.85);
+    margin-bottom: 16px;
 }
 
 .bio-note {
@@ -133,7 +149,9 @@ section {
 }
 
 h2 {
-    font-size: 1.8rem;
+    font-family: 'Sora', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 600;
+    font-size: 1.6rem;
     border-bottom: 2px solid #eee;
     padding-bottom: 10px;
     margin-bottom: 20px;
@@ -155,16 +173,19 @@ h3 {
 }
 
 .news-list li {
+    font-size: 0.95rem;
+    color: rgba(30, 31, 36, 0.85);
     display: flex;
     gap: 0.5em;
-    align-items: flex-start;
+    align-items: baseline;
     padding: 2px 0;
 }
 
 .news-list .date {
-    font-family: inherit;
-    font-weight: 400;
-    width: 9ch;
+    font-family: 'Sora', 'Aptos', 'Lato', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    width: 10ch;
     color: var(--primary-color);
     flex-shrink: 0;
 }
