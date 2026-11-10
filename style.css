@@ -143,6 +143,13 @@ a:hover {
 .affiliation {
     font-size: 1.15rem;
     color: var(--light-text);
+    margin-bottom: 2px;
+}
+
+.affiliation-sub {
+    font-size: 0.76rem;
+    white-space: nowrap;
+    color: #8a8d93;
     margin-bottom: 20px;
 }
 
