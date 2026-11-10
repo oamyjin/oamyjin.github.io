@@ -405,31 +405,6 @@ h3 {
     gap: 22px;
 }
 
-.exp-item {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-.exp-logo {
-    flex-shrink: 0;
-    width: 56px;
-    height: 56px;
-    border-radius: 12px;
-    background: #fff;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-}
-
-.exp-logo img {
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-}
-
 .exp-body {
     min-width: 0;
 }
@@ -461,10 +436,6 @@ h3 {
 }
 
 @media (max-width: 768px) {
-    .exp-item {
-        align-items: flex-start;
-    }
-
     .exp-chip {
         white-space: normal;
     }
