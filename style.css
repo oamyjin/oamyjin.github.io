@@ -33,29 +33,21 @@ a:hover {
 .current-highlight {
     color: #1E1F24;
     font-weight: 600;
-    position: relative;
     text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.current-highlight::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 0;
-    height: 1.5px;
-    background: var(--accent-color);
-    transition: width 0.3s ease;
+    background-image: linear-gradient(var(--accent-color), var(--accent-color));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1.5px;
+    padding-bottom: 1px;
+    -webkit-box-decoration-break: slice;
+    box-decoration-break: slice;
+    transition: color 0.3s ease, background-size 0.3s ease;
 }
 
 .current-highlight:hover {
     color: var(--accent-color);
     text-decoration: none;
-}
-
-.current-highlight:hover::after {
-    width: 100%;
+    background-size: 100% 1.5px;
 }
 
 .bio-intro {
