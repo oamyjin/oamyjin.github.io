@@ -240,9 +240,9 @@ h3 {
 }
 
 .category-icon {
-    height: 44px;
+    height: 60px;
     width: auto;
-    margin: -10px 0;
+    margin: -18px 0 -6px;
 }
 
 .publication-item {
