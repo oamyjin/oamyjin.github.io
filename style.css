@@ -1668,8 +1668,34 @@ button:focus-visible {
     width: 100%;
 }
 
-.reel-tabs:has(+ .reel.paused, + .reel.offscreen, + .reel.holding) .reel-bar i,
-.reel-tabs:has(+ .reel .s-badminton.play) .reel-bar i {
+/* Progress is shown by the icon itself sliding along a plain grey bar */
+.reel-bar i {
+    display: none;
+}
+
+.reel-tab img {
+    position: relative;
+    align-self: flex-start;
+    left: 0;
+    translate: 0 0;
+}
+
+.reel-tab.done img {
+    left: 100%;
+    translate: -100% 0;
+}
+
+.reel-tab.on img {
+    animation: reel-slide 5s linear forwards;
+}
+
+@keyframes reel-slide {
+    from { left: 0; translate: 0 0; }
+    to { left: 100%; translate: -100% 0; }
+}
+
+.reel-tabs:has(+ .reel.paused, + .reel.offscreen, + .reel.holding) .reel-tab img,
+.reel-tabs:has(+ .reel .s-badminton.play) .reel-tab img {
     animation-play-state: paused;
 }
 
@@ -1681,5 +1707,10 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
     .reel-tabs * {
         animation: none !important;
+    }
+
+    .reel-tab.on img {
+        left: 50%;
+        translate: -50% 0;
     }
 }

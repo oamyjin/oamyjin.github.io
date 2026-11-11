@@ -392,12 +392,12 @@
     function go(i) {
         cur = (i + scenes.length) % scenes.length;
         Array.prototype.forEach.call(scenes, function (s, k) { s.classList.toggle('on', k === cur); });
-        Array.prototype.forEach.call(bars, function (b, k) {
-            b.classList.remove('on');
-            b.classList.toggle('done', k < cur);
+        Array.prototype.forEach.call(tabEls, function (t, k) {
+            t.classList.remove('on');
+            t.classList.toggle('done', k < cur);
         });
         void reel.offsetWidth; // restart the progress animation
-        bars[cur].classList.add('on');
+        tabEls[cur].classList.add('on');
         caption.innerHTML = NAMES[cur] + '<span class="reel-hint">' + HINTS[cur] + '</span>';
         items.forEach(function (it, k) { it.classList.toggle('active', k === cur); });
         Array.prototype.forEach.call(tabEls, function (t, k) { t.classList.toggle('active', k === cur); });
@@ -406,7 +406,7 @@
     }
 
     tabs.addEventListener('animationend', function (e) {
-        if (e.target.parentNode === bars[cur]) go(cur + 1);
+        if (e.animationName === 'reel-slide' && e.target.parentNode === tabEls[cur]) go(cur + 1);
     });
 
     items.forEach(function (it, k) {
