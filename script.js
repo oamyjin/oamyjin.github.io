@@ -140,7 +140,7 @@
             cv.style.height = H + 'px';
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            var want = Math.max(10, Math.min(36, Math.round((W * H) / 9000)));
+            var want = Math.max(8, Math.min(28, Math.round((W * H) / 12500)));
             while (nodes.length < want) nodes.push(makeNode());
             nodes.length = want;
             nodes.forEach(function (n) {
