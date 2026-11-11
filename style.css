@@ -1735,3 +1735,16 @@ button:focus-visible {
         width: 100%;
     }
 }
+
+/* Tabs sit under the stage: bar first, icon beneath it */
+.reel-tab {
+    flex-direction: column-reverse;
+}
+
+.reel-tab:hover img {
+    transform: translateY(2px);
+}
+
+.reel-tab.active img {
+    transform: translateY(1px) scale(1.08);
+}
