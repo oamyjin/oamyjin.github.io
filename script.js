@@ -294,6 +294,8 @@
     var PAUSE_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><rect x="2" y="1.5" width="3" height="9" rx="1"/><rect x="7" y="1.5" width="3" height="9" rx="1"/></svg>';
     var PLAY_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.6v8.8a.6.6 0 0 0 .9.5l7-4.4a.6.6 0 0 0 0-1L3.9 1.1a.6.6 0 0 0-.9.5z"/></svg>';
 
+    var ARROW_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="D" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
     function rep(n, fn) {
         var out = '';
         for (var i = 0; i < n; i++) out += fn(i);
@@ -309,9 +311,9 @@
 
         '<div class="reel-scene s-badminton">' +
             '<div class="court"></div><div class="net"></div>' +
-            '<img class="reel-icon racket l" src="' + ICON + 'badminton.png" alt="">' +
-            '<img class="reel-icon racket r" src="' + ICON + 'badminton.png" alt="">' +
-            '<div class="shuttle-x"><div class="shuttle-y"></div></div>' +
+            '<img class="reel-icon racket l" src="' + ICON + 'racket.png" alt="">' +
+            '<img class="reel-icon racket r" src="' + ICON + 'racket.png" alt="">' +
+            '<div class="shuttle-x"><div class="shuttle-y"><img class="shuttle" src="' + ICON + 'shuttlecock.png" alt=""></div></div>' +
         '</div>' +
 
         '<div class="reel-scene s-hiking">' +
@@ -349,7 +351,11 @@
         '</div>' +
 
         '<div class="reel-caption" aria-live="polite"></div>' +
-        '<button class="reel-toggle" type="button" aria-label="Pause">' + PAUSE_SVG + '</button>';
+        '<div class="reel-controls">' +
+            '<button class="reel-prev" type="button" aria-label="Previous interest">' + ARROW_SVG.replace('D', 'M7.5 2.5 4 6l3.5 3.5') + '</button>' +
+            '<button class="reel-toggle" type="button" aria-label="Pause">' + PAUSE_SVG + '</button>' +
+            '<button class="reel-next" type="button" aria-label="Next interest">' + ARROW_SVG.replace('D', 'M4.5 2.5 8 6 4.5 9.5') + '</button>' +
+        '</div>';
 
     list.parentNode.insertBefore(reel, list);
 
@@ -387,6 +393,9 @@
     items.forEach(function (it, k) {
         it.addEventListener('click', function () { go(k); });
     });
+
+    reel.querySelector('.reel-prev').addEventListener('click', function () { go(cur - 1); });
+    reel.querySelector('.reel-next').addEventListener('click', function () { go(cur + 1); });
 
     toggle.addEventListener('click', function () {
         var paused = reel.classList.toggle('paused');

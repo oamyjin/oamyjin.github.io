@@ -1057,11 +1057,16 @@ button:focus-visible {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.reel-toggle {
+.reel-controls {
     position: absolute;
     right: 12px;
     bottom: 10px;
     z-index: 5;
+    display: flex;
+    gap: 6px;
+}
+
+.reel-controls button {
     width: 30px;
     height: 30px;
     display: flex;
@@ -1071,14 +1076,19 @@ button:focus-visible {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.88);
     fill: #550b88;
+    stroke: #550b88;
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease, background 0.2s ease;
 }
 
-.reel-toggle:hover {
-    transform: scale(1.1);
+.reel-controls button:hover {
+    transform: scale(1.12);
     background: #fff;
+}
+
+.reel-controls button:active {
+    transform: scale(0.95);
 }
 
 .reel-scene {
@@ -1158,41 +1168,52 @@ button:focus-visible {
     box-shadow: 0 0 0 1px rgba(120, 150, 100, 0.3);
 }
 
-.s-badminton .racket { bottom: 16%; height: 100px; }
-.s-badminton .racket.l { left: 7%; transform-origin: 20% 85%; animation: racket-l 1.8s ease-in-out infinite; }
-.s-badminton .racket.r { right: 7%; transform-origin: 80% 85%; animation: racket-r 1.8s ease-in-out infinite; }
+.s-badminton .racket { bottom: 14%; height: 104px; transform-origin: 50% 90%; }
+.s-badminton .racket.l { left: 9%; animation: racket-l 1.8s ease-in-out infinite; }
+.s-badminton .racket.r { right: 9%; animation: racket-r 1.8s ease-in-out infinite; }
 
 @keyframes racket-l {
-    0%, 100% { transform: rotate(14deg); }
-    12% { transform: rotate(-16deg); }
-    50% { transform: rotate(0deg); }
+    0%, 100% { transform: rotate(10deg); }
+    10% { transform: rotate(-22deg); }
+    45% { transform: rotate(-4deg); }
 }
 
 @keyframes racket-r {
-    0%, 100% { transform: scaleX(-1) rotate(0deg); }
-    50% { transform: scaleX(-1) rotate(14deg); }
-    62% { transform: scaleX(-1) rotate(-16deg); }
+    0%, 100% { transform: scaleX(-1) rotate(-4deg); }
+    50% { transform: scaleX(-1) rotate(10deg); }
+    60% { transform: scaleX(-1) rotate(-22deg); }
 }
 
+/* The shuttlecock: x and y move on separate elements so the path is an arc,
+   and the image turns so the cork always leads. */
 .s-badminton .shuttle-x {
     position: absolute;
-    left: 27%;
-    bottom: 52%;
+    left: 21%;
+    bottom: 50%;
     animation: shuttle-x 0.9s linear infinite alternate;
 }
 
 .s-badminton .shuttle-y {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #fff7e6;
-    border: 2px solid #e9b872;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
     animation: shuttle-y 0.45s cubic-bezier(0.2, 0.6, 0.4, 1) infinite alternate;
 }
 
-@keyframes shuttle-x { to { left: 70%; } }
-@keyframes shuttle-y { to { transform: translateY(-52px); } }
+.s-badminton .shuttle {
+    display: block;
+    height: 34px;
+    width: auto;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.12));
+    animation: shuttle-turn 1.8s linear infinite;
+}
+
+@keyframes shuttle-x { to { left: 74%; } }
+@keyframes shuttle-y { to { transform: translateY(-58px); } }
+
+@keyframes shuttle-turn {
+    0% { transform: rotate(-180deg); }
+    49.99% { transform: rotate(-90deg); }
+    50% { transform: rotate(90deg); }
+    100% { transform: rotate(0deg); }
+}
 
 /* 2. Hiking: hills roll by */
 .s-hiking { background: linear-gradient(#e4f0fb, #fdf4e3); }
@@ -1491,4 +1512,13 @@ button:focus-visible {
     .reel .cloud.c1 { left: 12%; }
     .reel .cloud.c2 { left: 70%; }
     .reel .cloud.c3 { left: 40%; }
+}
+
+/* Interest icons sit against the right edge; the banner stays left */
+.interest-easter {
+    margin-right: auto;
+}
+
+.interest-label {
+    white-space: nowrap;
 }
