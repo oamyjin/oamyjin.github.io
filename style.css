@@ -1169,8 +1169,8 @@ button:focus-visible {
 }
 
 .s-badminton .racket { bottom: 13%; height: 90px; transform-origin: 50% 90%; }
-.s-badminton .racket.l { left: 9%; animation: racket-l 2.8s ease-in-out infinite; }
-.s-badminton .racket.r { right: 9%; animation: racket-r 2.8s ease-in-out infinite; }
+.s-badminton .racket.l { left: 9%; animation: racket-l 2s ease-in-out infinite; }
+.s-badminton .racket.r { right: 9%; animation: racket-r 2s ease-in-out infinite; }
 
 @keyframes racket-l {
     0%, 100% { transform: rotate(10deg); }
@@ -1190,11 +1190,11 @@ button:focus-visible {
     position: absolute;
     left: 21%;
     bottom: 50%;
-    animation: shuttle-x 1.4s linear infinite alternate;
+    animation: shuttle-x 1s linear infinite alternate;
 }
 
 .s-badminton .shuttle-y {
-    animation: shuttle-y 0.7s cubic-bezier(0.2, 0.6, 0.4, 1) infinite alternate;
+    animation: shuttle-y 0.5s cubic-bezier(0.2, 0.6, 0.4, 1) infinite alternate;
 }
 
 .s-badminton .shuttle {
@@ -1202,7 +1202,7 @@ button:focus-visible {
     height: 30px;
     width: auto;
     filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.12));
-    animation: shuttle-turn 2.8s linear infinite;
+    animation: shuttle-turn 2s linear infinite;
 }
 
 @keyframes shuttle-x { to { left: 74%; } }
