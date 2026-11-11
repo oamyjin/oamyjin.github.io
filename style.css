@@ -121,8 +121,8 @@ a:hover {
 }
 
 .profile-img {
-    width: 200px;
-    height: 200px;
+    width: 176px;
+    height: 176px;
     border-radius: 50%;
     object-fit: cover;
     object-position: center 35%;
