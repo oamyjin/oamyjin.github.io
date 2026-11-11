@@ -308,8 +308,6 @@
     reel.setAttribute('role', 'group');
     reel.setAttribute('aria-label', 'Interests, animated');
     reel.innerHTML =
-        '<div class="reel-bars">' + rep(6, function () { return '<span class="reel-bar"><i></i></span>'; }) + '</div>' +
-
         '<div class="reel-scene s-badminton">' +
             '<div class="court"></div><div class="net"></div>' +
             '<img class="reel-icon racket l" src="' + ICON + 'racket.png" alt="">' +
@@ -358,11 +356,23 @@
             '<button class="reel-next" type="button" aria-label="Next interest">' + ARROW_SVG.replace('D', 'M4.5 2.5 8 6 4.5 9.5') + '</button>' +
         '</div>';
 
+    // One tab per interest above the stage: its icon, with the story progress bar under it.
+    var FILES = ['badminton', 'hiking', 'cube', 'musical', 'reading', 'traveling'];
+    var tabs = document.createElement('div');
+    tabs.className = 'reel-tabs';
+    tabs.innerHTML = rep(6, function (i) {
+        return '<button class="reel-tab" type="button" aria-label="' + NAMES[i] + '">' +
+            '<img src="' + ICON + FILES[i] + '.png" alt="">' +
+            '<span class="reel-bar"><i></i></span></button>';
+    });
+
+    list.parentNode.insertBefore(tabs, list);
     list.parentNode.insertBefore(reel, list);
     list.style.display = 'none'; // the reel replaces the static icon row
 
     var scenes = reel.querySelectorAll('.reel-scene');
-    var bars = reel.querySelectorAll('.reel-bar');
+    var bars = tabs.querySelectorAll('.reel-bar');
+    var tabEls = tabs.querySelectorAll('.reel-tab');
     var caption = reel.querySelector('.reel-caption');
     var toggle = reel.querySelector('.reel-toggle');
     var grid = reel.querySelector('.cube-grid');
@@ -390,16 +400,20 @@
         bars[cur].classList.add('on');
         caption.innerHTML = NAMES[cur] + '<span class="reel-hint">' + HINTS[cur] + '</span>';
         items.forEach(function (it, k) { it.classList.toggle('active', k === cur); });
+        Array.prototype.forEach.call(tabEls, function (t, k) { t.classList.toggle('active', k === cur); });
         resetPlay();
         if (cur === 2) { tick = 0; scramble(); }
     }
 
-    reel.querySelector('.reel-bars').addEventListener('animationend', function (e) {
+    tabs.addEventListener('animationend', function (e) {
         if (e.target.parentNode === bars[cur]) go(cur + 1);
     });
 
     items.forEach(function (it, k) {
         it.addEventListener('click', function () { go(k); });
+    });
+    Array.prototype.forEach.call(tabEls, function (t, k) {
+        t.addEventListener('click', function () { go(k); });
     });
 
     reel.querySelector('.reel-prev').addEventListener('click', function () { go(cur - 1); });

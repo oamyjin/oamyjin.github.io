@@ -1619,3 +1619,67 @@ button:focus-visible {
 .reel:has(.s-badminton.play) .reel-bar i {
     animation-play-state: paused;
 }
+
+/* ==========================================================
+   Reel tabs: each interest's icon sits on its progress bar,
+   above the stage. Click one to jump to that scene.
+   ========================================================== */
+.reel-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 4px 0 10px;
+}
+
+.reel-tab {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.reel-tab img {
+    height: 36px;
+    max-width: 100%;
+    object-fit: contain;
+    opacity: 0.6;
+    filter: saturate(0.8);
+    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+}
+
+.reel-tab:hover img {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+.reel-tab.active img {
+    opacity: 1;
+    filter: drop-shadow(0 4px 6px rgba(87, 6, 140, 0.18));
+    transform: translateY(-2px) scale(1.12);
+}
+
+.reel-tab .reel-bar {
+    flex: none;
+    width: 100%;
+}
+
+.reel-tabs:has(+ .reel.paused, + .reel.offscreen, + .reel.holding) .reel-bar i,
+.reel-tabs:has(+ .reel .s-badminton.play) .reel-bar i {
+    animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+    .reel-tabs { gap: 5px; }
+    .reel-tab img { height: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reel-tabs * {
+        animation: none !important;
+    }
+}
