@@ -1668,9 +1668,24 @@ button:focus-visible {
     width: 100%;
 }
 
-/* Progress is shown by the icon itself sliding along a plain grey bar */
-.reel-bar i {
-    display: none;
+/* Progress: the icon slides along its bar, leaving a soft trail in that scene's colour */
+.reel-tab:nth-child(1) { --tab-c: #bcd9a8; } /* badminton: light green */
+.reel-tab:nth-child(2) { --tab-c: #a9cfc0; } /* hiking: mint */
+.reel-tab:nth-child(3) { --tab-c: #f1d98a; } /* cube: pale yellow */
+.reel-tab:nth-child(4) { --tab-c: #cdb8e6; } /* musicals: lavender */
+.reel-tab:nth-child(5) { --tab-c: #f3c3a0; } /* reading: peach */
+.reel-tab:nth-child(6) { --tab-c: #a9c8ec; } /* traveling: light blue */
+
+.reel-tab .reel-bar i {
+    background: var(--tab-c);
+}
+
+.reel-tab.done .reel-bar i {
+    width: 100%;
+}
+
+.reel-tab.on .reel-bar i {
+    animation: reel-fill 5s linear forwards;
 }
 
 .reel-tab img {
@@ -1695,7 +1710,9 @@ button:focus-visible {
 }
 
 .reel-tabs:has(+ .reel.paused, + .reel.offscreen, + .reel.holding) .reel-tab img,
-.reel-tabs:has(+ .reel .s-badminton.play) .reel-tab img {
+.reel-tabs:has(+ .reel .s-badminton.play) .reel-tab img,
+.reel-tabs:has(+ .reel.paused, + .reel.offscreen, + .reel.holding) .reel-bar i,
+.reel-tabs:has(+ .reel .s-badminton.play) .reel-bar i {
     animation-play-state: paused;
 }
 
@@ -1712,5 +1729,9 @@ button:focus-visible {
     .reel-tab.on img {
         left: 50%;
         translate: -50% 0;
+    }
+
+    .reel-tab.on .reel-bar i {
+        width: 100%;
     }
 }
