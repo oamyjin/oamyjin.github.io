@@ -1534,7 +1534,7 @@ button:focus-visible {
 .reel-hint {
     margin-left: 7px;
     font-weight: 400;
-    color: #8a8d93;
+    color: #a9acb3;
 }
 
 /* A bigger grab target for the fast-moving shuttlecock */
@@ -1596,9 +1596,6 @@ button:focus-visible {
     from { transform: rotate(-45deg) translate(26px, -26px); opacity: 0; }
 }
 
-@media (max-width: 768px) {
-    .reel-hint { display: none; }
-}
 
 /* The story timer also waits while a badminton rally is being played */
 .reel:has(.s-badminton.play) .reel-bar i {

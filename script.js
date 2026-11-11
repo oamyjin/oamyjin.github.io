@@ -290,7 +290,7 @@
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var ICON = 'assets/images/icons/';
     var NAMES = ['Badminton', 'Hiking', 'Rubik’s Cube', 'Musicals', 'Reading', 'Traveling'];
-    var HINTS = ['drag a racket to hit the shuttlecock', 'drag me · tap to jump', 'spin the cube · tap the tiles', 'aim the light · tap for music', 'tap for ideas', 'tap to drop a pin'];
+    var HINTS = ['drag to play', 'drag · tap to jump', 'spin · tap the tiles', 'tap for music', 'tap for ideas', 'tap to drop a pin'];
     var CUBE = ['#f6d27a', '#b9d3a0', '#f4b6b0', '#a9c4ea', '#f2b98a', '#fdf6e8'];
     var PAUSE_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><rect x="2" y="1.5" width="3" height="9" rx="1"/><rect x="7" y="1.5" width="3" height="9" rx="1"/></svg>';
     var PLAY_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.6v8.8a.6.6 0 0 0 .9.5l7-4.4a.6.6 0 0 0 0-1L3.9 1.1a.6.6 0 0 0-.9.5z"/></svg>';
