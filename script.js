@@ -277,3 +277,142 @@
         requestAnimationFrame(frame);
     })();
 })();
+
+/* ---------- Interests reel: a tiny looping "video" built from the icons.
+   Built here so the page without JavaScript still shows the plain icon row. ---------- */
+(function () {
+    'use strict';
+
+    var list = document.querySelector('.interest-list');
+    var items = Array.prototype.slice.call(document.querySelectorAll('.interest'));
+    if (!list || items.length !== 6) return;
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var ICON = 'assets/images/icons/';
+    var NAMES = ['Badminton', 'Hiking', 'Rubik’s Cube', 'Musicals', 'Reading', 'Traveling'];
+    var CUBE = ['#f6d27a', '#b9d3a0', '#f4b6b0', '#a9c4ea', '#f2b98a', '#fdf6e8'];
+    var PAUSE_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><rect x="2" y="1.5" width="3" height="9" rx="1"/><rect x="7" y="1.5" width="3" height="9" rx="1"/></svg>';
+    var PLAY_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.6v8.8a.6.6 0 0 0 .9.5l7-4.4a.6.6 0 0 0 0-1L3.9 1.1a.6.6 0 0 0-.9.5z"/></svg>';
+
+    function rep(n, fn) {
+        var out = '';
+        for (var i = 0; i < n; i++) out += fn(i);
+        return out;
+    }
+
+    var reel = document.createElement('div');
+    reel.className = 'reel';
+    reel.setAttribute('role', 'group');
+    reel.setAttribute('aria-label', 'Interests, animated');
+    reel.innerHTML =
+        '<div class="reel-bars">' + rep(6, function () { return '<span class="reel-bar"><i></i></span>'; }) + '</div>' +
+
+        '<div class="reel-scene s-badminton">' +
+            '<div class="court"></div><div class="net"></div>' +
+            '<img class="reel-icon racket l" src="' + ICON + 'badminton.png" alt="">' +
+            '<img class="reel-icon racket r" src="' + ICON + 'badminton.png" alt="">' +
+            '<div class="shuttle-x"><div class="shuttle-y"></div></div>' +
+        '</div>' +
+
+        '<div class="reel-scene s-hiking">' +
+            '<div class="sun"></div>' +
+            '<div class="cloud c1"></div><div class="cloud c2"></div>' +
+            '<div class="hills back"></div><div class="hills front"></div>' +
+            '<img class="reel-icon hiker" src="' + ICON + 'hiking.png" alt="">' +
+        '</div>' +
+
+        '<div class="reel-scene s-cube">' +
+            '<img class="reel-icon cube" src="' + ICON + 'cube.png" alt="">' +
+            '<div class="cube-grid">' + rep(9, function () { return '<i></i>'; }) + '</div>' +
+        '</div>' +
+
+        '<div class="reel-scene s-musical">' +
+            '<div class="spot"></div>' +
+            '<img class="reel-icon star" src="' + ICON + 'musical.png" alt="">' +
+            '<span class="note n1">♪</span><span class="note n2">♫</span><span class="note n3">♪</span><span class="note n4">♫</span>' +
+            '<div class="curtain l"></div><div class="curtain r"></div>' +
+        '</div>' +
+
+        '<div class="reel-scene s-reading">' +
+            '<span class="glyph g1">A</span><span class="glyph g2">文</span><span class="glyph g3">∑</span>' +
+            '<span class="glyph g4">?</span><span class="glyph g5">✦</span><span class="glyph g6">π</span>' +
+            '<img class="reel-icon book" src="' + ICON + 'reading.png" alt="">' +
+        '</div>' +
+
+        '<div class="reel-scene s-traveling">' +
+            '<div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>' +
+            '<svg class="route" viewBox="0 0 600 220" preserveAspectRatio="none" aria-hidden="true">' +
+                '<path d="M40 175 Q 300 -40 560 80" fill="none" stroke="#8fb0dc" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 12" vector-effect="non-scaling-stroke"/>' +
+            '</svg>' +
+            '<span class="pin p1"></span><span class="pin p2"></span>' +
+            '<img class="reel-icon globe" src="' + ICON + 'traveling.png" alt="">' +
+        '</div>' +
+
+        '<div class="reel-caption" aria-live="polite"></div>' +
+        '<button class="reel-toggle" type="button" aria-label="Pause">' + PAUSE_SVG + '</button>';
+
+    list.parentNode.insertBefore(reel, list);
+
+    var scenes = reel.querySelectorAll('.reel-scene');
+    var bars = reel.querySelectorAll('.reel-bar');
+    var caption = reel.querySelector('.reel-caption');
+    var toggle = reel.querySelector('.reel-toggle');
+    var grid = reel.querySelector('.cube-grid');
+    var cells = Array.prototype.slice.call(grid.querySelectorAll('i'));
+    var cur = -1, tick = 0;
+
+    function scramble() {
+        grid.classList.remove('solved');
+        cells.forEach(function (c) { c.style.background = CUBE[Math.floor(Math.random() * CUBE.length)]; });
+    }
+
+    function go(i) {
+        cur = (i + scenes.length) % scenes.length;
+        Array.prototype.forEach.call(scenes, function (s, k) { s.classList.toggle('on', k === cur); });
+        Array.prototype.forEach.call(bars, function (b, k) {
+            b.classList.remove('on');
+            b.classList.toggle('done', k < cur);
+        });
+        void reel.offsetWidth; // restart the progress animation
+        bars[cur].classList.add('on');
+        caption.textContent = NAMES[cur];
+        items.forEach(function (it, k) { it.classList.toggle('active', k === cur); });
+        if (cur === 2) { tick = 0; scramble(); }
+    }
+
+    reel.querySelector('.reel-bars').addEventListener('animationend', function (e) {
+        if (e.target.parentNode === bars[cur]) go(cur + 1);
+    });
+
+    items.forEach(function (it, k) {
+        it.addEventListener('click', function () { go(k); });
+    });
+
+    toggle.addEventListener('click', function () {
+        var paused = reel.classList.toggle('paused');
+        toggle.innerHTML = paused ? PLAY_SVG : PAUSE_SVG;
+        toggle.setAttribute('aria-label', paused ? 'Play' : 'Pause');
+    });
+
+    // The cube scrambles for a while, then snaps to solved.
+    setInterval(function () {
+        if (cur !== 2 || reduceMotion || reel.classList.contains('paused') || reel.classList.contains('offscreen')) return;
+        tick++;
+        var phase = tick % 16;
+        if (phase < 10) {
+            scramble();
+        } else if (phase === 10) {
+            var solved = CUBE[Math.floor(tick / 16) % (CUBE.length - 1)];
+            cells.forEach(function (c) { c.style.background = solved; });
+            grid.classList.add('solved');
+        }
+    }, 260);
+
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+            reel.classList.toggle('offscreen', !entries[0].isIntersecting);
+        }).observe(reel);
+    }
+
+    go(0);
+})();

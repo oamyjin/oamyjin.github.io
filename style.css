@@ -714,7 +714,7 @@ button:focus-visible {
 
 /* Section nav drawn as a path of nodes */
 .side-nav {
-    margin-top: 44px;
+    margin-top: 76px;
 }
 
 .side-nav ul {
@@ -979,4 +979,517 @@ button:focus-visible {
     .news-list li:first-child::before {
         animation: none;
     }
+}
+
+/* ==========================================================
+   Interests reel: six short looping scenes, story-style.
+   ========================================================== */
+.reel {
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    height: 230px;
+    margin: 6px 0 22px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #f6f3fa;
+    border: 1px solid rgba(87, 6, 140, 0.08);
+    box-shadow: 0 6px 22px rgba(60, 30, 100, 0.08);
+    isolation: isolate;
+}
+
+.reel.paused *,
+.reel.paused *::before,
+.reel.offscreen *,
+.reel.offscreen *::before {
+    animation-play-state: paused !important;
+}
+
+.reel-bars {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    gap: 5px;
+    z-index: 5;
+}
+
+.reel-bar {
+    flex: 1;
+    height: 3px;
+    border-radius: 3px;
+    background: rgba(30, 31, 36, 0.14);
+    overflow: hidden;
+}
+
+.reel-bar i {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: 3px;
+    background: rgba(85, 11, 136, 0.7);
+}
+
+.reel-bar.done i {
+    width: 100%;
+}
+
+.reel-bar.on i {
+    animation: reel-fill 5s linear forwards;
+}
+
+@keyframes reel-fill {
+    to { width: 100%; }
+}
+
+.reel-caption {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+    z-index: 5;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    font-family: 'Sora', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #1E1F24;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.reel-toggle {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    z-index: 5;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.88);
+    fill: #550b88;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.reel-toggle:hover {
+    transform: scale(1.1);
+    background: #fff;
+}
+
+.reel-scene {
+    position: absolute;
+    inset: 0;
+    display: none;
+    overflow: hidden;
+}
+
+.reel-scene.on {
+    display: block;
+    animation: reel-in 0.5s ease;
+}
+
+@keyframes reel-in {
+    from { opacity: 0; transform: scale(1.03); }
+}
+
+.reel-icon {
+    position: absolute;
+    height: 120px;
+    width: auto;
+    filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.1));
+}
+
+.reel .cloud {
+    position: absolute;
+    left: 100%;
+    width: 64px;
+    height: 20px;
+    border-radius: 20px;
+    background: #fff;
+    opacity: 0.9;
+    animation: reel-drift 16s linear infinite;
+}
+
+.reel .cloud::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: -11px;
+    width: 30px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.reel .cloud.c1 { top: 22%; animation-delay: -3s; }
+.reel .cloud.c2 { top: 40%; animation-delay: -10s; transform: scale(0.7); animation-duration: 22s; }
+.reel .cloud.c3 { top: 66%; animation-delay: -15s; animation-duration: 19s; }
+
+@keyframes reel-drift {
+    to { left: -80px; }
+}
+
+/* 1. Badminton: a rally over the net */
+.s-badminton { background: linear-gradient(#f4f9ef, #e6f1dc); }
+
+.s-badminton .court {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 24%;
+    background: #cfe2bf;
+}
+
+.s-badminton .net {
+    position: absolute;
+    left: 50%;
+    bottom: 24%;
+    width: 4px;
+    height: 34%;
+    margin-left: -2px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(#fff 0 6px, #d9e6cf 6px 9px);
+    box-shadow: 0 0 0 1px rgba(120, 150, 100, 0.3);
+}
+
+.s-badminton .racket { bottom: 16%; height: 110px; }
+.s-badminton .racket.l { left: 7%; transform-origin: 20% 85%; animation: racket-l 1.8s ease-in-out infinite; }
+.s-badminton .racket.r { right: 7%; transform-origin: 80% 85%; animation: racket-r 1.8s ease-in-out infinite; }
+
+@keyframes racket-l {
+    0%, 100% { transform: rotate(14deg); }
+    12% { transform: rotate(-16deg); }
+    50% { transform: rotate(0deg); }
+}
+
+@keyframes racket-r {
+    0%, 100% { transform: scaleX(-1) rotate(0deg); }
+    50% { transform: scaleX(-1) rotate(14deg); }
+    62% { transform: scaleX(-1) rotate(-16deg); }
+}
+
+.s-badminton .shuttle-x {
+    position: absolute;
+    left: 27%;
+    bottom: 52%;
+    animation: shuttle-x 0.9s linear infinite alternate;
+}
+
+.s-badminton .shuttle-y {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff7e6;
+    border: 2px solid #e9b872;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+    animation: shuttle-y 0.45s cubic-bezier(0.2, 0.6, 0.4, 1) infinite alternate;
+}
+
+@keyframes shuttle-x { to { left: 70%; } }
+@keyframes shuttle-y { to { transform: translateY(-62px); } }
+
+/* 2. Hiking: hills roll by */
+.s-hiking { background: linear-gradient(#e4f0fb, #fdf4e3); }
+
+.s-hiking .sun {
+    position: absolute;
+    right: 12%;
+    top: 16%;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #f8cf6a;
+    animation: reel-sun 3s ease-in-out infinite;
+}
+
+@keyframes reel-sun {
+    0%, 100% { box-shadow: 0 0 0 6px rgba(248, 207, 106, 0.3); }
+    50% { box-shadow: 0 0 0 14px rgba(248, 207, 106, 0.12); }
+}
+
+.s-hiking .hills {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 200%;
+    background-repeat: repeat-x;
+    background-size: 50% 100%;
+    animation: reel-scroll 14s linear infinite;
+}
+
+.s-hiking .hills.back {
+    height: 62%;
+    animation-duration: 26s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120' preserveAspectRatio='none'%3E%3Cpath d='M0 50 Q75 -20 150 50 T300 50 V120 H0Z' fill='%23cfe2bf'/%3E%3C/svg%3E");
+}
+
+.s-hiking .hills.front {
+    height: 40%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 120' preserveAspectRatio='none'%3E%3Cpath d='M0 60 Q75 10 150 60 T300 60 V120 H0Z' fill='%23aecb9b'/%3E%3C/svg%3E");
+}
+
+@keyframes reel-scroll { to { transform: translateX(-50%); } }
+
+.s-hiking .hiker {
+    left: 50%;
+    bottom: 12%;
+    margin-left: -62px;
+    animation: reel-walk 0.7s ease-in-out infinite;
+}
+
+@keyframes reel-walk {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-6px) rotate(2deg); }
+}
+
+/* 3. Rubik's cube: scramble, then solve */
+.s-cube { background: linear-gradient(120deg, #fdf6e8, #f6ecdd); }
+
+.s-cube .cube {
+    left: 20%;
+    top: 50%;
+    margin-top: -64px;
+    animation: reel-cube 4s cubic-bezier(0.6, 0, 0.3, 1) infinite;
+}
+
+@keyframes reel-cube {
+    0% { transform: rotate(0) scale(1); }
+    12% { transform: rotate(45deg) scale(1.08); }
+    25% { transform: rotate(90deg) scale(1); }
+    37% { transform: rotate(135deg) scale(1.08); }
+    50% { transform: rotate(180deg) scale(1); }
+    62% { transform: rotate(225deg) scale(1.08); }
+    75%, 100% { transform: rotate(360deg) scale(1); }
+}
+
+.s-cube .cube-grid {
+    position: absolute;
+    right: 18%;
+    top: 50%;
+    width: 132px;
+    height: 132px;
+    margin-top: -66px;
+    padding: 7px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    border-radius: 14px;
+    background: #fffaf0;
+    box-shadow: 0 6px 16px rgba(120, 90, 40, 0.14);
+    transform: rotate(-6deg);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.s-cube .cube-grid i {
+    border-radius: 7px;
+    background: #f6d27a;
+    transition: background 0.2s ease;
+}
+
+.s-cube .cube-grid.solved {
+    transform: rotate(0deg) scale(1.1);
+}
+
+/* 4. Musicals: curtain up, spotlight on */
+.s-musical { background: radial-gradient(circle at 50% 65%, #f8f1fc, #decdee); }
+
+.s-musical .spot {
+    position: absolute;
+    left: 50%;
+    top: -6%;
+    width: 64%;
+    height: 112%;
+    margin-left: -32%;
+    background: linear-gradient(rgba(255, 244, 200, 0.85), rgba(255, 244, 200, 0));
+    clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
+    transform-origin: 50% 0;
+    animation: reel-spot 2.6s ease-in-out infinite alternate;
+}
+
+@keyframes reel-spot {
+    from { transform: rotate(-7deg); }
+    to { transform: rotate(7deg); }
+}
+
+.s-musical .star {
+    left: 50%;
+    bottom: 14%;
+    height: 132px;
+    margin-left: -66px;
+    animation: reel-bow 2s ease-in-out infinite;
+}
+
+@keyframes reel-bow {
+    0%, 100% { transform: scale(1) rotate(-3deg); }
+    50% { transform: scale(1.07) rotate(3deg); }
+}
+
+.s-musical .curtain {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    background: repeating-linear-gradient(90deg, #b79ad6 0 14px, #a688c9 14px 28px);
+    box-shadow: 0 0 18px rgba(60, 30, 100, 0.25);
+}
+
+.s-musical .curtain.l { left: 0; transform: translateX(-76%); animation: curtain-l 1.3s cubic-bezier(0.6, 0, 0.3, 1); }
+.s-musical .curtain.r { right: 0; transform: translateX(76%); animation: curtain-r 1.3s cubic-bezier(0.6, 0, 0.3, 1); }
+
+@keyframes curtain-l { from { transform: translateX(0); } }
+@keyframes curtain-r { from { transform: translateX(0); } }
+
+.s-musical .note {
+    position: absolute;
+    bottom: 30%;
+    font-size: 22px;
+    color: #8b5fbf;
+    opacity: 0;
+    animation: reel-rise 2.6s ease-out infinite;
+}
+
+.s-musical .n1 { left: 32%; animation-delay: 1s; }
+.s-musical .n2 { left: 64%; animation-delay: 1.7s; font-size: 26px; }
+.s-musical .n3 { left: 70%; animation-delay: 2.5s; }
+.s-musical .n4 { left: 27%; animation-delay: 3.1s; font-size: 18px; }
+
+@keyframes reel-rise {
+    0% { opacity: 0; transform: translateY(0) rotate(-8deg); }
+    20% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-110px) rotate(12deg); }
+}
+
+/* 5. Reading: ideas float out of the book */
+.s-reading { background: linear-gradient(#fff7ec, #fde9d3); }
+
+.s-reading .book {
+    left: 50%;
+    bottom: 18%;
+    height: 92px;
+    margin-left: -88px;
+    animation: reel-float 3s ease-in-out infinite;
+}
+
+@keyframes reel-float {
+    0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+    50% { transform: translateY(-7px) rotate(1.5deg); }
+}
+
+.s-reading .glyph {
+    position: absolute;
+    bottom: 46%;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #e2733f;
+    opacity: 0;
+    animation: reel-rise 3s ease-out infinite;
+}
+
+.s-reading .g1 { left: 38%; animation-delay: 0.2s; }
+.s-reading .g2 { left: 56%; animation-delay: 0.8s; color: #5b79b8; }
+.s-reading .g3 { left: 46%; animation-delay: 1.4s; color: #8b5fbf; font-size: 26px; }
+.s-reading .g4 { left: 62%; animation-delay: 1.9s; color: #d99a2b; }
+.s-reading .g5 { left: 34%; animation-delay: 2.3s; color: #7cc6a4; font-size: 18px; }
+.s-reading .g6 { left: 51%; animation-delay: 2.7s; color: #5b79b8; }
+
+/* 6. Traveling: a route across the sky */
+.s-traveling { background: linear-gradient(#dfeefb, #f4f9fe); }
+
+.s-traveling .route {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.s-traveling .route path {
+    animation: reel-route 1.2s linear infinite;
+}
+
+@keyframes reel-route { to { stroke-dashoffset: -14; } }
+
+.s-traveling .pin {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50% 50% 50% 0;
+    background: #ef7d5a;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    animation: reel-pin 1.6s ease-in-out infinite;
+}
+
+.s-traveling .pin::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.s-traveling .p1 { left: 5%; top: 70%; }
+.s-traveling .p2 { left: 92%; top: 27%; animation-delay: -0.8s; }
+
+@keyframes reel-pin {
+    0%, 100% { transform: rotate(-45deg) translate(0, 0); }
+    50% { transform: rotate(-45deg) translate(5px, -5px); }
+}
+
+.s-traveling .globe {
+    left: 50%;
+    top: 50%;
+    height: 128px;
+    margin: -64px 0 0 -72px;
+    animation: reel-globe 3.4s ease-in-out infinite;
+}
+
+@keyframes reel-globe {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50% { transform: translateY(-8px) rotate(4deg); }
+}
+
+/* The icon row doubles as the scene picker */
+.interest.active .interest-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.interest.active img {
+    filter: drop-shadow(0 8px 10px rgba(87, 6, 140, 0.22));
+}
+
+@media (max-width: 768px) {
+    .reel { height: 200px; }
+    .reel-icon { height: 96px; }
+    .s-badminton .racket { height: 84px; }
+    .s-hiking .hiker { margin-left: -50px; }
+    .s-cube .cube { left: 8%; margin-top: -52px; }
+    .s-cube .cube-grid { right: 8%; width: 112px; height: 112px; margin-top: -56px; }
+    .s-musical .star { height: 108px; margin-left: -54px; }
+    .s-reading .book { height: 74px; margin-left: -71px; }
+    .s-traveling .globe { height: 104px; margin: -52px 0 0 -58px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reel *,
+    .reel *::before {
+        animation: none !important;
+    }
+
+    .reel-bar.on i { width: 100%; }
+    .reel-toggle { display: none; }
+    .reel .cloud.c1 { left: 12%; }
+    .reel .cloud.c2 { left: 70%; }
+    .reel .cloud.c3 { left: 40%; }
 }
