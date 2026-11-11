@@ -366,8 +366,8 @@
             '<span class="reel-bar"><i></i></span></button>';
     });
 
-    list.parentNode.insertBefore(tabs, list);
     list.parentNode.insertBefore(reel, list);
+    list.parentNode.insertBefore(tabs, list);
     list.style.display = 'none'; // the reel replaces the static icon row
 
     var scenes = reel.querySelectorAll('.reel-scene');

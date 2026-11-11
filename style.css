@@ -1627,7 +1627,7 @@ button:focus-visible {
 .reel-tabs {
     display: flex;
     gap: 8px;
-    margin: 4px 0 10px;
+    margin: 14px 0 0;
 }
 
 .reel-tab {
@@ -1709,10 +1709,10 @@ button:focus-visible {
     to { left: 100%; translate: -100% 0; }
 }
 
-.reel-tabs:has(+ .reel.paused, + .reel.offscreen, + .reel.holding) .reel-tab img,
-.reel-tabs:has(+ .reel .s-badminton.play) .reel-tab img,
-.reel-tabs:has(+ .reel.paused, + .reel.offscreen, + .reel.holding) .reel-bar i,
-.reel-tabs:has(+ .reel .s-badminton.play) .reel-bar i {
+.reel:is(.paused, .offscreen, .holding) + .reel-tabs .reel-tab img,
+.reel:has(.s-badminton.play) + .reel-tabs .reel-tab img,
+.reel:is(.paused, .offscreen, .holding) + .reel-tabs .reel-bar i,
+.reel:has(.s-badminton.play) + .reel-tabs .reel-bar i {
     animation-play-state: paused;
 }
 
