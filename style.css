@@ -800,30 +800,6 @@ button:focus-visible {
     transform: translateY(6px);
 }
 
-.wave {
-    display: inline-block;
-    transform-origin: 70% 75%;
-    animation: wave 2.4s ease-in-out 0.6s 1;
-    cursor: default;
-}
-
-.wave:hover {
-    animation: wave-again 1.2s ease-in-out 1;
-}
-
-@keyframes wave {
-    0%, 60%, 100% { transform: rotate(0); }
-    10%, 30% { transform: rotate(16deg); }
-    20%, 40% { transform: rotate(-8deg); }
-    50% { transform: rotate(10deg); }
-}
-
-@keyframes wave-again {
-    0%, 100% { transform: rotate(0); }
-    20%, 60% { transform: rotate(16deg); }
-    40%, 80% { transform: rotate(-8deg); }
-}
-
 /* Reveal on scroll (only when script.js is running) */
 .js .reveal {
     opacity: 0;
@@ -1000,8 +976,6 @@ button:focus-visible {
         scroll-behavior: auto;
     }
 
-    .wave,
-    .wave:hover,
     .news-list li:first-child::before {
         animation: none;
     }
