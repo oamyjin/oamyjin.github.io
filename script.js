@@ -359,6 +359,7 @@
         '</div>';
 
     list.parentNode.insertBefore(reel, list);
+    list.style.display = 'none'; // the reel replaces the static icon row
 
     var scenes = reel.querySelectorAll('.reel-scene');
     var bars = reel.querySelectorAll('.reel-bar');
