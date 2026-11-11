@@ -504,7 +504,7 @@ h3 {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
-    gap: clamp(8px, 2.4vw, 22px);
+    gap: clamp(8px, 2.8vw, 30px);
     padding: 8px 0 4px;
 }
 
@@ -1521,4 +1521,91 @@ button:focus-visible {
 
 .interest-label {
     white-space: nowrap;
+}
+
+/* ==========================================================
+   Interests reel: drag and tap interactions.
+   ========================================================== */
+.reel img {
+    -webkit-user-drag: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.reel .grab {
+    cursor: grab;
+    touch-action: none;
+}
+
+.reel .grab.held {
+    cursor: grabbing;
+}
+
+/* While something is held, the story timer waits */
+.reel.holding .reel-bar i {
+    animation-play-state: paused;
+}
+
+.reel-hint {
+    margin-left: 7px;
+    font-weight: 400;
+    color: #8a8d93;
+}
+
+/* A bigger grab target for the fast-moving shuttlecock */
+.s-badminton .shuttle-x::after {
+    content: '';
+    position: absolute;
+    inset: -16px;
+    border-radius: 50%;
+}
+
+.s-badminton.manual .racket,
+.s-badminton.manual .shuttle-x,
+.s-badminton.manual .shuttle-y,
+.s-badminton.manual .shuttle {
+    animation-play-state: paused;
+}
+
+.s-cube .cube-grid i {
+    cursor: pointer;
+}
+
+.s-cube .cube-grid i:hover {
+    filter: brightness(1.06);
+}
+
+.s-musical .spot.aim {
+    animation: none;
+    transition: rotate 0.15s ease-out;
+}
+
+.reel .pop {
+    position: absolute;
+    margin: -14px 0 0 -8px;
+    pointer-events: none;
+    animation: reel-rise 1.6s ease-out forwards;
+}
+
+.reel .pop-note {
+    font-size: 24px;
+    color: #8b5fbf;
+}
+
+.reel .pop-glyph {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.s-traveling .pin.dropped {
+    animation: reel-pin-drop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes reel-pin-drop {
+    from { transform: rotate(-45deg) translate(26px, -26px); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+    .reel-hint { display: none; }
 }

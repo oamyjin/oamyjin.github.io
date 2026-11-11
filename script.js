@@ -290,6 +290,7 @@
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var ICON = 'assets/images/icons/';
     var NAMES = ['Badminton', 'Hiking', 'Rubik’s Cube', 'Musicals', 'Reading', 'Traveling'];
+    var HINTS = ['drag the shuttlecock', 'drag me · tap to jump', 'spin the cube · tap the tiles', 'aim the light · tap for music', 'tap for ideas', 'tap to drop a pin'];
     var CUBE = ['#f6d27a', '#b9d3a0', '#f4b6b0', '#a9c4ea', '#f2b98a', '#fdf6e8'];
     var PAUSE_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><rect x="2" y="1.5" width="3" height="9" rx="1"/><rect x="7" y="1.5" width="3" height="9" rx="1"/></svg>';
     var PLAY_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.6v8.8a.6.6 0 0 0 .9.5l7-4.4a.6.6 0 0 0 0-1L3.9 1.1a.6.6 0 0 0-.9.5z"/></svg>';
@@ -365,11 +366,16 @@
     var toggle = reel.querySelector('.reel-toggle');
     var grid = reel.querySelector('.cube-grid');
     var cells = Array.prototype.slice.call(grid.querySelectorAll('i'));
-    var cur = -1, tick = 0;
+    var cur = -1, tick = 0, cubeManual = false, justDragged = false, flight = 0, drags = [];
+
+    function paint(cell, k) {
+        cell.dataset.k = k;
+        cell.style.background = CUBE[k];
+    }
 
     function scramble() {
         grid.classList.remove('solved');
-        cells.forEach(function (c) { c.style.background = CUBE[Math.floor(Math.random() * CUBE.length)]; });
+        cells.forEach(function (c) { paint(c, Math.floor(Math.random() * CUBE.length)); });
     }
 
     function go(i) {
@@ -381,8 +387,9 @@
         });
         void reel.offsetWidth; // restart the progress animation
         bars[cur].classList.add('on');
-        caption.textContent = NAMES[cur];
+        caption.innerHTML = NAMES[cur] + '<span class="reel-hint">' + HINTS[cur] + '</span>';
         items.forEach(function (it, k) { it.classList.toggle('active', k === cur); });
+        resetPlay();
         if (cur === 2) { tick = 0; scramble(); }
     }
 
@@ -405,14 +412,14 @@
 
     // The cube scrambles for a while, then snaps to solved.
     setInterval(function () {
-        if (cur !== 2 || reduceMotion || reel.classList.contains('paused') || reel.classList.contains('offscreen')) return;
+        if (cur !== 2 || cubeManual || reduceMotion || reel.classList.contains('paused') || reel.classList.contains('offscreen')) return;
         tick++;
         var phase = tick % 16;
         if (phase < 10) {
             scramble();
         } else if (phase === 10) {
             var solved = CUBE[Math.floor(tick / 16) % (CUBE.length - 1)];
-            cells.forEach(function (c) { c.style.background = solved; });
+            cells.forEach(function (c) { paint(c, CUBE.indexOf(solved)); });
             grid.classList.add('solved');
         }
     }, 260);
@@ -422,6 +429,241 @@
             reel.classList.toggle('offscreen', !entries[0].isIntersecting);
         }).observe(reel);
     }
+
+    /* ----- Play: every scene can be dragged or tapped ----- */
+
+    // Dragging uses the standalone `translate` property, so it stacks on top of
+    // whatever `transform` animation the element is already running.
+    function makeDrag(el, opts) {
+        opts = opts || {};
+        var cx = 0, cy = 0, sx = 0, sy = 0, ox = 0, oy = 0;
+        var held = false, moved = false, vx = 0, vy = 0, lx = 0, ly = 0, lt = 0;
+
+        function raw(x, y) {
+            cx = x; cy = y;
+            el.style.translate = x + 'px ' + y + 'px';
+        }
+
+        function clamped(x, y) {
+            var r = el.getBoundingClientRect(), R = reel.getBoundingClientRect();
+            var mx = r.left + r.width / 2 - cx + x, my = r.top + r.height / 2 - cy + y;
+            x += Math.max(R.left + 12, Math.min(R.right - 12, mx)) - mx;
+            y += Math.max(R.top + 12, Math.min(R.bottom - 12, my)) - my;
+            raw(x, opts.axis === 'x' ? cy : y);
+        }
+
+        el.classList.add('grab');
+        el.setAttribute('draggable', 'false');
+
+        el.addEventListener('pointerdown', function (e) {
+            if (e.button) return;
+            held = true; moved = false;
+            sx = lx = e.clientX; sy = ly = e.clientY; lt = e.timeStamp;
+            ox = cx; oy = cy; vx = vy = 0;
+            try { el.setPointerCapture(e.pointerId); } catch (err) {}
+            el.classList.add('held');
+            reel.classList.add('holding');
+            if (opts.onStart) opts.onStart();
+            e.preventDefault();
+        });
+
+        el.addEventListener('pointermove', function (e) {
+            if (!held) return;
+            var dx = e.clientX - sx, dy = e.clientY - sy;
+            if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+            var dt = Math.max(e.timeStamp - lt, 1) / 1000;
+            vx = vx * 0.5 + ((e.clientX - lx) / dt) * 0.5;
+            vy = vy * 0.5 + ((e.clientY - ly) / dt) * 0.5;
+            lx = e.clientX; ly = e.clientY; lt = e.timeStamp;
+            clamped(ox + dx, oy + dy);
+            if (opts.onMove) opts.onMove(cx, cy);
+        });
+
+        function end(e) {
+            if (!held) return;
+            held = false;
+            el.classList.remove('held');
+            reel.classList.remove('holding');
+            if (moved) {
+                justDragged = true;
+                setTimeout(function () { justDragged = false; }, 0);
+                if (opts.onRelease) opts.onRelease(vx, vy);
+            } else {
+                if (opts.onRelease) opts.onRelease(0, 0);
+                if (opts.onTap) opts.onTap(e);
+            }
+        }
+        el.addEventListener('pointerup', end);
+        el.addEventListener('pointercancel', end);
+
+        var api = {
+            raw: raw,
+            pos: function () { return { x: cx, y: cy }; },
+            isHeld: function () { return held; },
+            reset: function () { el.style.transition = ''; raw(0, 0); if (opts.onMove) opts.onMove(0, 0); }
+        };
+        drags.push(api);
+        return api;
+    }
+
+    function pop(scene, e, cls, text, color) {
+        if (reduceMotion) return;
+        var R = scene.getBoundingClientRect();
+        var el = document.createElement('span');
+        el.className = cls;
+        if (text) el.textContent = text;
+        if (color) el.style.color = color;
+        el.style.left = (e.clientX - R.left) + 'px';
+        el.style.top = (e.clientY - R.top) + 'px';
+        el.addEventListener('animationend', function () { el.remove(); });
+        scene.appendChild(el);
+        return el;
+    }
+
+    function sceneTap(scene, fn) {
+        scene.addEventListener('click', function (e) {
+            if (justDragged) return;
+            fn(e);
+        });
+    }
+
+    function resetPlay() {
+        flight++;
+        cubeManual = false;
+        drags.forEach(function (d) { d.reset(); });
+        Array.prototype.forEach.call(reel.querySelectorAll('.manual'), function (el) { el.classList.remove('manual'); });
+        Array.prototype.forEach.call(reel.querySelectorAll('.pop, .pin.dropped'), function (el) { el.remove(); });
+    }
+
+    // 1. Badminton: grab the shuttlecock and throw it; it bounces, then the rally resumes.
+    (function () {
+        var scene = reel.querySelector('.s-badminton');
+        var el = scene.querySelector('.shuttle-x');
+        var drag = makeDrag(el, {
+            onStart: function () {
+                flight++;
+                el.style.transition = '';
+                scene.classList.add('manual');
+            },
+            onRelease: function (vx, vy) {
+                if (reduceMotion) return;
+                var id = ++flight, t0 = performance.now(), last = t0;
+                vx = Math.max(-900, Math.min(900, vx));
+                vy = Math.max(-900, Math.min(900, vy));
+                function home() {
+                    el.style.transition = 'translate 0.45s ease';
+                    drag.raw(0, 0);
+                    setTimeout(function () {
+                        if (id !== flight) return;
+                        el.style.transition = '';
+                        scene.classList.remove('manual');
+                    }, 470);
+                }
+                (function step(now) {
+                    if (id !== flight) return;
+                    var dt = Math.min((now - last) / 1000, 0.04);
+                    last = now;
+                    vy += 1100 * dt;
+                    var p = drag.pos();
+                    drag.raw(p.x + vx * dt, p.y + vy * dt);
+                    var r = el.getBoundingClientRect(), R = reel.getBoundingClientRect();
+                    var floor = R.bottom - R.height * 0.15;
+                    var onFloor = false;
+                    if (r.bottom > floor) {
+                        drag.raw(drag.pos().x, drag.pos().y - (r.bottom - floor));
+                        vy = -Math.abs(vy) * 0.45;
+                        vx *= 0.7;
+                        onFloor = true;
+                    }
+                    if (r.top < R.top && vy < 0) vy = Math.abs(vy) * 0.4;
+                    if (r.left < R.left) vx = Math.abs(vx) * 0.6;
+                    if (r.right > R.right) vx = -Math.abs(vx) * 0.6;
+                    if (now - t0 > 2400 || (onFloor && Math.abs(vy) < 40 && Math.abs(vx) < 20)) return home();
+                    requestAnimationFrame(step);
+                })(t0);
+            }
+        });
+    })();
+
+    // 2. Hiking: drag the hiker along the trail; tap to jump.
+    (function () {
+        var hiker = reel.querySelector('.hiker');
+        var drag = makeDrag(hiker, {
+            axis: 'x',
+            onTap: function () {
+                if (reduceMotion || !hiker.animate) return;
+                var x = drag.pos().x;
+                hiker.animate(
+                    [{ translate: x + 'px 0' }, { translate: x + 'px -44px' }, { translate: x + 'px 0' }],
+                    { duration: 520, easing: 'cubic-bezier(0.3, 0, 0.5, 1)' }
+                );
+            }
+        });
+    })();
+
+    // 3. Rubik's cube: drag to spin it; tap tiles to recolour them and solve the face yourself.
+    (function () {
+        var cube = reel.querySelector('.cube');
+        makeDrag(cube, { onMove: function (x) { cube.style.rotate = (x * 1.4) + 'deg'; } });
+        cells.forEach(function (cell) {
+            cell.addEventListener('click', function () {
+                cubeManual = true;
+                paint(cell, ((+cell.dataset.k || 0) + 1) % CUBE.length);
+                var first = cells[0].dataset.k;
+                grid.classList.toggle('solved', cells.every(function (c) { return c.dataset.k === first; }));
+            });
+        });
+    })();
+
+    // 4. Musicals: the spotlight follows the pointer; tap anywhere for a note.
+    (function () {
+        var scene = reel.querySelector('.s-musical');
+        var spot = scene.querySelector('.spot');
+        makeDrag(scene.querySelector('.star'));
+        scene.addEventListener('pointermove', function (e) {
+            var R = scene.getBoundingClientRect();
+            var t = (e.clientX - R.left) / R.width - 0.5;
+            spot.classList.add('aim');
+            spot.style.rotate = (-t * 70) + 'deg';
+        });
+        scene.addEventListener('pointerleave', function () {
+            spot.classList.remove('aim');
+            spot.style.rotate = '';
+        });
+        sceneTap(scene, function (e) {
+            pop(scene, e, 'pop pop-note', Math.random() < 0.5 ? '♪' : '♫');
+        });
+    })();
+
+    // 5. Reading: drag the book; tap anywhere for an idea.
+    (function () {
+        var scene = reel.querySelector('.s-reading');
+        var glyphs = ['A', '文', '∑', '?', '✦', 'π', '∞', 'λ', 'あ', '&'];
+        var colors = ['#e2733f', '#5b79b8', '#8b5fbf', '#d99a2b', '#7cc6a4'];
+        makeDrag(scene.querySelector('.book'));
+        sceneTap(scene, function (e) {
+            pop(scene, e, 'pop pop-glyph',
+                glyphs[Math.floor(Math.random() * glyphs.length)],
+                colors[Math.floor(Math.random() * colors.length)]);
+        });
+    })();
+
+    // 6. Traveling: drag the globe and the pins; tap the sky to drop a new pin.
+    (function () {
+        var scene = reel.querySelector('.s-traveling');
+        makeDrag(scene.querySelector('.globe'));
+        Array.prototype.forEach.call(scene.querySelectorAll('.pin'), function (p) { makeDrag(p); });
+        sceneTap(scene, function (e) {
+            if (e.target.closest('.pin, .globe')) return;
+            if (scene.querySelectorAll('.pin.dropped').length >= 12) return;
+            var R = scene.getBoundingClientRect();
+            var pin = document.createElement('span');
+            pin.className = 'pin dropped';
+            pin.style.left = (e.clientX - R.left - 7) + 'px';
+            pin.style.top = (e.clientY - R.top - 14) + 'px';
+            scene.appendChild(pin);
+        });
+    })();
 
     go(0);
 })();
