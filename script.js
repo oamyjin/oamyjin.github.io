@@ -69,7 +69,7 @@
     /* ---------- Greeting that switches language ---------- */
     var greet = document.getElementById('greet');
     if (greet && !reduceMotion) {
-        var greetings = ['Hello!', '你好!', 'Hi there!'];
+        var greetings = ['Hello!', '你好!', 'Aloha!', 'Hi there!'];
         var gi = 0;
         setInterval(function () {
             greet.classList.add('swap');
