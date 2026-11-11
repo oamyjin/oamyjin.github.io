@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jiajin Liu | Personal Website</title>
-    <meta name="description" content="Jiajin Liu's personal website. Ph.D. student in Computer Science at NYU working on agentic reasoning, graph learning, and multimodal large language models.">
+    <meta name="description" content="Jiajin Liu's personal website. Ph.D. candidate in Computer Science at NYU working on agentic reasoning, graph learning, and multimodal large language models.">
     <meta name="keywords" content="Jiajin Liu, 刘佳进">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&display=swap">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script>document.documentElement.classList.add('js');</script>
+    <script src="script.js" defer></script>
 </head>
 <body>
+    <div class="scroll-progress" aria-hidden="true"></div>
     <div class="container">
         <aside class="sidebar">
+            <canvas id="graph-bg" aria-hidden="true"></canvas>
             <div class="profile-container">
                 <img src="assets/images/profile.jpg" alt="Jiajin Liu" class="profile-img">
                 <h1>Jiajin Liu</h1>
@@ -27,11 +31,21 @@
                     <a href="assets/Jiajin_CV.pdf?v=2026-11" title="CV" target="_blank" rel="noopener"><img src="assets/images/icons/cv.png" alt="CV"><span class="social-label">CV</span></a>
                 </div>
             </div>
+            <nav class="side-nav" aria-label="Sections">
+                <ul>
+                    <li><a href="#bio">About</a></li>
+                    <li><a href="#news">News</a></li>
+                    <li><a href="#publications">Publications</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#activities">Activities</a></li>
+                    <li><a href="#interests">Interests</a></li>
+                </ul>
+            </nav>
         </aside>
 
         <main class="content">
             <section id="bio">
-                <h2>Hello!</h2>
+                <h2><span class="greet" id="greet">Hello!</span> <span class="wave" aria-hidden="true">👋</span></h2>
                 <p class="bio-intro">
                     I am a Ph.D. candidate in Computer Science at <a href="https://www.nyu.edu/" class="current-highlight hl-nyu">New York University</a>, advised by <a href="https://qiaoyu-tan.github.io/index.html" class="current-highlight hl-nyu">Prof. Qiaoyu Tan</a>. My current research focuses on <strong>agentic reasoning</strong>, <strong>graph learning</strong>, and <strong>multimodal large language models</strong>, with an emphasis on building reasoning systems for structured data, efficient search-augmented agents, and multimodal graph learning. I was also a Research Scientist Intern at <a href="https://research.adobe.com/" class="current-highlight hl-adobe">Adobe Research</a>.
                 </p>
@@ -87,7 +101,7 @@
                             <div class="publication-content">
                                 <div class="publication-title"><a href="https://arxiv.org/abs/2610.12932">SEEDS: Preview-Guided Evidence Admission for Search Agents</a></div>
                                 <div class="publication-authors"><span class="author-name">Jiajin Liu</span>, Chenxi Xu, Dongzhe Fan, Yuanfu Sun, Qiaoyu Tan</div>
-                                <div class="publication-venue">arXiv, 2026</div>
+                                <div class="publication-venue venue-preprint">arXiv, 2026</div>
                             </div>
                         </div>
 
@@ -98,7 +112,7 @@
                             <div class="publication-content">
                                 <div class="publication-title"><a href="https://arxiv.org/abs/2601.08621">GraphSearch: Agentic Search-Augmented Reasoning for Zero-Shot Graph Learning</a></div>
                                 <div class="publication-authors"><span class="author-name">Jiajin Liu</span>, Yuanfu Sun, Dongzhe Fan, Qiaoyu Tan</div>
-                                <div class="publication-venue">arXiv, 2026</div>
+                                <div class="publication-venue venue-preprint">arXiv, 2026</div>
                             </div>
                         </div>
 
@@ -292,7 +306,12 @@
                 </ul>
             </section>
 
+            <footer class="site-footer">
+                <span>© 2026 Jiajin Liu</span>
+                <span>Last updated Nov 2026</span>
+            </footer>
         </main>
     </div>
+    <button class="to-top" type="button" aria-label="Back to top">↑</button>
 </body>
 </html>
