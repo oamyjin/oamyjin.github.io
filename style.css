@@ -987,7 +987,7 @@ button:focus-visible {
 .reel {
     position: relative;
     width: 100%;
-    height: 196px;
+    height: 168px;
     margin: 6px 0 22px;
     border-radius: 18px;
     overflow: hidden;
@@ -1109,7 +1109,7 @@ button:focus-visible {
 
 .reel-icon {
     position: absolute;
-    height: 108px;
+    height: 94px;
     width: auto;
     filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.1));
 }
@@ -1168,7 +1168,7 @@ button:focus-visible {
     box-shadow: 0 0 0 1px rgba(120, 150, 100, 0.3);
 }
 
-.s-badminton .racket { bottom: 14%; height: 104px; transform-origin: 50% 90%; }
+.s-badminton .racket { bottom: 13%; height: 90px; transform-origin: 50% 90%; }
 .s-badminton .racket.l { left: 9%; animation: racket-l 1.8s ease-in-out infinite; }
 .s-badminton .racket.r { right: 9%; animation: racket-r 1.8s ease-in-out infinite; }
 
@@ -1199,14 +1199,14 @@ button:focus-visible {
 
 .s-badminton .shuttle {
     display: block;
-    height: 34px;
+    height: 30px;
     width: auto;
     filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.12));
     animation: shuttle-turn 1.8s linear infinite;
 }
 
 @keyframes shuttle-x { to { left: 74%; } }
-@keyframes shuttle-y { to { transform: translateY(-58px); } }
+@keyframes shuttle-y { to { transform: translateY(-46px); } }
 
 @keyframes shuttle-turn {
     0% { transform: rotate(-180deg); }
@@ -1260,7 +1260,7 @@ button:focus-visible {
 .s-hiking .hiker {
     left: 50%;
     bottom: 12%;
-    margin-left: -56px;
+    margin-left: -48px;
     animation: reel-walk 0.7s ease-in-out infinite;
 }
 
@@ -1275,7 +1275,7 @@ button:focus-visible {
 .s-cube .cube {
     left: 24%;
     top: 50%;
-    margin-top: -58px;
+    margin-top: -47px;
     animation: reel-cube 4s cubic-bezier(0.6, 0, 0.3, 1) infinite;
 }
 
@@ -1293,9 +1293,9 @@ button:focus-visible {
     position: absolute;
     right: 24%;
     top: 50%;
-    width: 116px;
-    height: 116px;
-    margin-top: -58px;
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
     padding: 7px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1340,9 +1340,9 @@ button:focus-visible {
 
 .s-musical .star {
     left: 50%;
-    bottom: 12%;
-    height: 116px;
-    margin-left: -58px;
+    bottom: 11%;
+    height: 100px;
+    margin-left: -50px;
     animation: reel-bow 2s ease-in-out infinite;
 }
 
@@ -1383,7 +1383,7 @@ button:focus-visible {
 @keyframes reel-rise {
     0% { opacity: 0; transform: translateY(0) rotate(-8deg); }
     20% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-90px) rotate(12deg); }
+    100% { opacity: 0; transform: translateY(-76px) rotate(12deg); }
 }
 
 /* 5. Reading: ideas float out of the book */
@@ -1391,9 +1391,9 @@ button:focus-visible {
 
 .s-reading .book {
     left: 50%;
-    bottom: 16%;
-    height: 84px;
-    margin-left: -80px;
+    bottom: 15%;
+    height: 72px;
+    margin-left: -70px;
     animation: reel-float 3s ease-in-out infinite;
 }
 
@@ -1469,8 +1469,8 @@ button:focus-visible {
 .s-traveling .globe {
     left: 50%;
     top: 50%;
-    height: 112px;
-    margin: -56px 0 0 -63px;
+    height: 98px;
+    margin: -49px 0 0 -55px;
     animation: reel-globe 3.4s ease-in-out infinite;
 }
 
@@ -1490,15 +1490,15 @@ button:focus-visible {
 }
 
 @media (max-width: 768px) {
-    .reel { height: 180px; }
-    .reel-icon { height: 96px; }
+    .reel { height: 160px; }
+    .reel-icon { height: 88px; }
     .s-badminton .racket { height: 84px; }
-    .s-hiking .hiker { margin-left: -50px; }
-    .s-cube .cube { left: 8%; margin-top: -52px; }
-    .s-cube .cube-grid { right: 8%; width: 112px; height: 112px; margin-top: -56px; }
-    .s-musical .star { height: 108px; margin-left: -54px; }
-    .s-reading .book { height: 74px; margin-left: -71px; }
-    .s-traveling .globe { height: 104px; margin: -52px 0 0 -58px; }
+    .s-hiking .hiker { margin-left: -45px; }
+    .s-cube .cube { left: 8%; margin-top: -44px; }
+    .s-cube .cube-grid { right: 8%; width: 96px; height: 96px; margin-top: -48px; }
+    .s-musical .star { height: 96px; margin-left: -48px; }
+    .s-reading .book { height: 68px; margin-left: -66px; }
+    .s-traveling .globe { height: 92px; margin: -46px 0 0 -52px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
