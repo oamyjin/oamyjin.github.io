@@ -290,7 +290,7 @@
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var ICON = 'assets/images/icons/';
     var NAMES = ['Badminton', 'Hiking', 'Rubik’s Cube', 'Musicals', 'Reading', 'Traveling'];
-    var HINTS = ['drag the shuttlecock', 'drag me · tap to jump', 'spin the cube · tap the tiles', 'aim the light · tap for music', 'tap for ideas', 'tap to drop a pin'];
+    var HINTS = ['drag a racket to hit the shuttlecock', 'drag me · tap to jump', 'spin the cube · tap the tiles', 'aim the light · tap for music', 'tap for ideas', 'tap to drop a pin'];
     var CUBE = ['#f6d27a', '#b9d3a0', '#f4b6b0', '#a9c4ea', '#f2b98a', '#fdf6e8'];
     var PAUSE_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><rect x="2" y="1.5" width="3" height="9" rx="1"/><rect x="7" y="1.5" width="3" height="9" rx="1"/></svg>';
     var PLAY_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.6v8.8a.6.6 0 0 0 .9.5l7-4.4a.6.6 0 0 0 0-1L3.9 1.1a.6.6 0 0 0-.9.5z"/></svg>';
@@ -459,11 +459,11 @@
             if (e.button) return;
             held = true; moved = false;
             sx = lx = e.clientX; sy = ly = e.clientY; lt = e.timeStamp;
+            if (opts.onStart) opts.onStart();
             ox = cx; oy = cy; vx = vy = 0;
             try { el.setPointerCapture(e.pointerId); } catch (err) {}
             el.classList.add('held');
             reel.classList.add('holding');
-            if (opts.onStart) opts.onStart();
             e.preventDefault();
         });
 
@@ -531,57 +531,192 @@
         flight++;
         cubeManual = false;
         drags.forEach(function (d) { d.reset(); });
-        Array.prototype.forEach.call(reel.querySelectorAll('.manual'), function (el) { el.classList.remove('manual'); });
+        Array.prototype.forEach.call(reel.querySelectorAll('.play'), function (el) { el.classList.remove('play'); });
         Array.prototype.forEach.call(reel.querySelectorAll('.pop, .pin.dropped'), function (el) { el.remove(); });
     }
 
-    // 1. Badminton: grab the shuttlecock and throw it; it bounces, then the rally resumes.
+    // 1. Badminton: grab a racket (or the shuttlecock) and the looping rally becomes
+    //    a playable one. The racket you are not holding plays back. After a few idle
+    //    seconds everything glides home and the loop resumes.
     (function () {
         var scene = reel.querySelector('.s-badminton');
-        var el = scene.querySelector('.shuttle-x');
-        var drag = makeDrag(el, {
-            onStart: function () {
-                flight++;
-                el.style.transition = '';
-                scene.classList.add('manual');
-            },
-            onRelease: function (vx, vy) {
-                if (reduceMotion) return;
-                var id = ++flight, t0 = performance.now(), last = t0;
-                vx = Math.max(-900, Math.min(900, vx));
-                vy = Math.max(-900, Math.min(900, vy));
-                function home() {
-                    el.style.transition = 'translate 0.45s ease';
-                    drag.raw(0, 0);
-                    setTimeout(function () {
-                        if (id !== flight) return;
-                        el.style.transition = '';
-                        scene.classList.remove('manual');
-                    }, 470);
-                }
-                (function step(now) {
-                    if (id !== flight) return;
-                    var dt = Math.min((now - last) / 1000, 0.04);
-                    last = now;
-                    vy += 1100 * dt;
-                    var p = drag.pos();
-                    drag.raw(p.x + vx * dt, p.y + vy * dt);
-                    var r = el.getBoundingClientRect(), R = reel.getBoundingClientRect();
-                    var floor = R.bottom - R.height * 0.15;
-                    var onFloor = false;
-                    if (r.bottom > floor) {
-                        drag.raw(drag.pos().x, drag.pos().y - (r.bottom - floor));
-                        vy = -Math.abs(vy) * 0.45;
-                        vx *= 0.7;
-                        onFloor = true;
-                    }
-                    if (r.top < R.top && vy < 0) vy = Math.abs(vy) * 0.4;
-                    if (r.left < R.left) vx = Math.abs(vx) * 0.6;
-                    if (r.right > R.right) vx = -Math.abs(vx) * 0.6;
-                    if (now - t0 > 2400 || (onFloor && Math.abs(vy) < 40 && Math.abs(vx) < 20)) return home();
-                    requestAnimationFrame(step);
-                })(t0);
+        var shEl = scene.querySelector('.shuttle-x');
+        var shImg = scene.querySelector('.shuttle');
+        var G = 650, IDLE_MS = 5000;
+        var play = false, id = 0, last = 0, lastTouch = 0;
+        var sx = 0, sy = 0, vx = 0, vy = 0, bx = 0, by = 0;
+        var landed = false, landedAt = 0, user = null;
+
+        function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+        function local(el, fx, fy) {
+            var r = el.getBoundingClientRect(), R = reel.getBoundingClientRect();
+            return { x: r.left - R.left + r.width * fx, y: r.top - R.top + r.height * fy };
+        }
+
+        function enter() {
+            lastTouch = performance.now();
+            if (play) return;
+            var before = local(shEl, 0.5, 0.5);
+            scene.classList.add('play');
+            shEl.style.transition = '';
+            shDrag.raw(0, 0);
+            var base = local(shEl, 0.5, 0.5);
+            bx = base.x; by = base.y;
+            sx = before.x; sy = before.y; vx = vy = 0;
+            shDrag.raw(sx - bx, sy - by);
+            rackets.forEach(function (rk) {
+                rk.el.style.transition = '';
+                rk.hitAt = 0; rk.hvx = rk.hvy = 0; rk.px = null;
+            });
+            landed = false; play = true;
+            id = ++flight;
+            last = performance.now();
+            requestAnimationFrame(step);
+        }
+
+        function swing(rk) {
+            if (reduceMotion || !rk.el.animate) return;
+            rk.el.animate(
+                [{ rotate: '0deg' }, { rotate: (rk.dir * 28) + 'deg' }, { rotate: '0deg' }],
+                { duration: 260, easing: 'ease-out' }
+            );
+        }
+
+        function hit(rk, now, scale) {
+            rk.hitAt = now;
+            landed = false;
+            if (rk === user) {
+                vx = rk.dir * scale * clamp(430 + Math.abs(rk.hvx) * 0.35, 380, 700);
+                vy = -clamp(340 - rk.hvy * 0.25, 240, 560);
+                lastTouch = now;
+            } else {
+                vx = rk.dir * scale * (430 + Math.random() * 90);
+                vy = -(330 + Math.random() * 70);
             }
+            swing(rk);
+        }
+
+        function leave() {
+            play = false;
+            flight++;
+            [shEl].concat(rackets.map(function (rk) { return rk.el; })).forEach(function (el) {
+                el.style.transition = 'translate 0.45s ease';
+            });
+            shDrag.raw(0, 0);
+            rackets.forEach(function (rk) { rk.drag.raw(0, 0); });
+            setTimeout(function () {
+                if (play) return;
+                shEl.style.transition = '';
+                rackets.forEach(function (rk) { rk.el.style.transition = ''; });
+                shImg.style.rotate = '';
+                scene.classList.remove('play');
+                user = null;
+            }, 470);
+        }
+
+        function step(now) {
+            if (id !== flight) {           // the scene changed underneath us
+                play = false; user = null;
+                shImg.style.rotate = '';
+                return;
+            }
+            var dt = Math.min((now - last) / 1000, 0.04);
+            last = now;
+            var R = reel.getBoundingClientRect();
+            var W = R.width, H = R.height;
+            var floor = H * 0.86, netX = W / 2, netTop = H * 0.42;
+            var scale = clamp(W / 740, 0.55, 1);
+            var holding = shDrag.isHeld();
+
+            rackets.forEach(function (rk) {
+                var h = local(rk.el, rk.fx, 0.29);
+                if (rk.px !== null && dt > 0) {
+                    rk.hvx = rk.hvx * 0.6 + ((h.x - rk.px) / dt) * 0.4;
+                    rk.hvy = rk.hvy * 0.6 + ((h.y - rk.py) / dt) * 0.4;
+                }
+                rk.px = rk.hx = h.x; rk.py = rk.hy = h.y;
+                rk.rad = rk.el.getBoundingClientRect().height * 0.3;
+                if (rk.drag.isHeld()) { holding = true; lastTouch = now; }
+            });
+
+            // the racket nobody is holding chases the shuttlecock on its own side
+            rackets.forEach(function (rk) {
+                if (rk === user || rk.drag.isHeld()) return;
+                var p = rk.drag.pos(), tx = 0, ty = 0;
+                var mine = rk.dir > 0 ? sx < netX : sx > netX;
+                if (mine && !landed && !shDrag.isHeld()) {
+                    tx = p.x + (sx - rk.dir * 14 - rk.hx);
+                    ty = p.y + (sy + 8 - rk.hy);
+                }
+                tx = rk.dir > 0 ? clamp(tx, -50, W * 0.3) : clamp(tx, -W * 0.3, 50);
+                ty = clamp(ty, -H * 0.42, 14);
+                var dx = tx - p.x, dy = ty - p.y, d = Math.hypot(dx, dy), max = 560 * scale * dt;
+                if (d > max) { dx *= max / d; dy *= max / d; }
+                rk.drag.raw(p.x + dx, p.y + dy);
+            });
+
+            if (shDrag.isHeld()) {
+                var q = shDrag.pos();
+                sx = bx + q.x; sy = by + q.y; vx = vy = 0; landed = false;
+            } else {
+                if (!landed) {
+                    var prev = sx;
+                    vy += G * dt;
+                    vx *= 1 - 0.25 * dt;
+                    sx += vx * dt; sy += vy * dt;
+                    if (sy > netTop && (prev - netX) * (sx - netX) < 0) { sx = prev; vx = -vx * 0.3; }
+                    if (sx < 10) { sx = 10; vx = Math.abs(vx) * 0.5; }
+                    if (sx > W - 10) { sx = W - 10; vx = -Math.abs(vx) * 0.5; }
+                    rackets.forEach(function (rk) {
+                        if (now - rk.hitAt < 350) return;
+                        if (Math.hypot(sx - rk.hx, sy - rk.hy) < rk.rad + 10) hit(rk, now, scale);
+                    });
+                    if (sy > floor) { sy = floor; vx = vy = 0; landed = true; landedAt = now; }
+                } else if (now - landedAt > 700) {
+                    // serve again from the racket the player is not using
+                    var server = rackets[0] === user ? rackets[1] : rackets[0];
+                    sx = server.hx + server.dir * 18; sy = server.hy - 8;
+                    hit(server, now, scale);
+                }
+                shDrag.raw(sx - bx, sy - by);
+                if (Math.hypot(vx, vy) > 20) {
+                    shImg.style.rotate = (Math.atan2(vy, vx) * 180 / Math.PI - 135) + 'deg';
+                }
+            }
+
+            if (!holding && now - lastTouch > IDLE_MS) return leave();
+            requestAnimationFrame(step);
+        }
+
+        var shDrag = makeDrag(shEl, {
+            onStart: enter,
+            onRelease: function (rvx, rvy) {
+                vx = clamp(rvx, -900, 900);
+                vy = clamp(rvy, -900, 900);
+                lastTouch = performance.now();
+            }
+        });
+
+        var rackets = [
+            { el: scene.querySelector('.racket.l'), dir: 1, fx: 0.65 },
+            { el: scene.querySelector('.racket.r'), dir: -1, fx: 0.35 }
+        ];
+        rackets.forEach(function (rk) {
+            rk.hitAt = 0; rk.hvx = rk.hvy = 0; rk.px = null; rk.hx = rk.hy = 0; rk.rad = 28;
+            rk.drag = makeDrag(rk.el, {
+                onStart: function () { enter(); user = rk; },
+                onTap: function () {
+                    // a tap is a swing; it connects if the shuttlecock is within reach
+                    var now = performance.now();
+                    var R = reel.getBoundingClientRect();
+                    swing(rk);
+                    if (Math.hypot(sx - rk.hx, sy - rk.hy) < rk.rad + 48) {
+                        hit(rk, now, clamp(R.width / 740, 0.55, 1));
+                    }
+                    lastTouch = now;
+                }
+            });
         });
     })();
 

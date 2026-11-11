@@ -1560,11 +1560,16 @@ button:focus-visible {
     border-radius: 50%;
 }
 
-.s-badminton.manual .racket,
-.s-badminton.manual .shuttle-x,
-.s-badminton.manual .shuttle-y,
-.s-badminton.manual .shuttle {
-    animation-play-state: paused;
+/* Play mode: JavaScript drives the rally, so the looping animations step aside */
+.s-badminton .racket.r {
+    transform: scaleX(-1);
+}
+
+.s-badminton.play .racket,
+.s-badminton.play .shuttle-x,
+.s-badminton.play .shuttle-y,
+.s-badminton.play .shuttle {
+    animation: none;
 }
 
 .s-cube .cube-grid i {
@@ -1608,4 +1613,9 @@ button:focus-visible {
 
 @media (max-width: 768px) {
     .reel-hint { display: none; }
+}
+
+/* The story timer also waits while a badminton rally is being played */
+.reel:has(.s-badminton.play) .reel-bar i {
+    animation-play-state: paused;
 }
