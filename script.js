@@ -536,7 +536,7 @@
     }
 
     // 1. Badminton: grab a racket (or the shuttlecock) and the looping rally becomes
-    //    a playable one. The racket you are not holding plays back. After a few idle
+    //    a playable one. The other racket stays put and returns what reaches it. After a few idle
     //    seconds everything glides home and the loop resumes.
     (function () {
         var scene = reel.querySelector('.s-badminton');
@@ -640,20 +640,11 @@
                 if (rk.drag.isHeld()) { holding = true; lastTouch = now; }
             });
 
-            // the racket nobody is holding chases the shuttlecock on its own side
+            // the racket nobody is holding stays where it is (it only swings in place)
             rackets.forEach(function (rk) {
                 if (rk === user || rk.drag.isHeld()) return;
-                var p = rk.drag.pos(), tx = 0, ty = 0;
-                var mine = rk.dir > 0 ? sx < netX : sx > netX;
-                if (mine && !landed && !shDrag.isHeld()) {
-                    tx = p.x + (sx - rk.dir * 14 - rk.hx);
-                    ty = p.y + (sy + 8 - rk.hy);
-                }
-                tx = rk.dir > 0 ? clamp(tx, -50, W * 0.3) : clamp(tx, -W * 0.3, 50);
-                ty = clamp(ty, -H * 0.42, 14);
-                var dx = tx - p.x, dy = ty - p.y, d = Math.hypot(dx, dy), max = 560 * scale * dt;
-                if (d > max) { dx *= max / d; dy *= max / d; }
-                rk.drag.raw(p.x + dx, p.y + dy);
+                var p = rk.drag.pos(), d = Math.hypot(p.x, p.y), max = 560 * scale * dt;
+                if (d > 0) rk.drag.raw(d > max ? p.x * (1 - max / d) : 0, d > max ? p.y * (1 - max / d) : 0);
             });
 
             if (shDrag.isHeld()) {
@@ -670,7 +661,7 @@
                     if (sx > W - 10) { sx = W - 10; vx = -Math.abs(vx) * 0.5; }
                     rackets.forEach(function (rk) {
                         if (now - rk.hitAt < 350) return;
-                        if (Math.hypot(sx - rk.hx, sy - rk.hy) < rk.rad + 10) hit(rk, now, scale);
+                        if (Math.hypot(sx - rk.hx, sy - rk.hy) < rk.rad + (rk === user ? 10 : 30)) hit(rk, now, scale);
                     });
                     if (sy > floor) { sy = floor; vx = vy = 0; landed = true; landedAt = now; }
                 } else if (now - landedAt > 700) {
