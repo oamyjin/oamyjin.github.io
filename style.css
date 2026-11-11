@@ -987,8 +987,7 @@ button:focus-visible {
 .reel {
     position: relative;
     width: 100%;
-    max-width: 640px;
-    height: 230px;
+    height: 196px;
     margin: 6px 0 22px;
     border-radius: 18px;
     overflow: hidden;
@@ -1100,7 +1099,7 @@ button:focus-visible {
 
 .reel-icon {
     position: absolute;
-    height: 120px;
+    height: 108px;
     width: auto;
     filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.1));
 }
@@ -1159,7 +1158,7 @@ button:focus-visible {
     box-shadow: 0 0 0 1px rgba(120, 150, 100, 0.3);
 }
 
-.s-badminton .racket { bottom: 16%; height: 110px; }
+.s-badminton .racket { bottom: 16%; height: 100px; }
 .s-badminton .racket.l { left: 7%; transform-origin: 20% 85%; animation: racket-l 1.8s ease-in-out infinite; }
 .s-badminton .racket.r { right: 7%; transform-origin: 80% 85%; animation: racket-r 1.8s ease-in-out infinite; }
 
@@ -1193,7 +1192,7 @@ button:focus-visible {
 }
 
 @keyframes shuttle-x { to { left: 70%; } }
-@keyframes shuttle-y { to { transform: translateY(-62px); } }
+@keyframes shuttle-y { to { transform: translateY(-52px); } }
 
 /* 2. Hiking: hills roll by */
 .s-hiking { background: linear-gradient(#e4f0fb, #fdf4e3); }
@@ -1240,7 +1239,7 @@ button:focus-visible {
 .s-hiking .hiker {
     left: 50%;
     bottom: 12%;
-    margin-left: -62px;
+    margin-left: -56px;
     animation: reel-walk 0.7s ease-in-out infinite;
 }
 
@@ -1253,9 +1252,9 @@ button:focus-visible {
 .s-cube { background: linear-gradient(120deg, #fdf6e8, #f6ecdd); }
 
 .s-cube .cube {
-    left: 20%;
+    left: 24%;
     top: 50%;
-    margin-top: -64px;
+    margin-top: -58px;
     animation: reel-cube 4s cubic-bezier(0.6, 0, 0.3, 1) infinite;
 }
 
@@ -1271,11 +1270,11 @@ button:focus-visible {
 
 .s-cube .cube-grid {
     position: absolute;
-    right: 18%;
+    right: 24%;
     top: 50%;
-    width: 132px;
-    height: 132px;
-    margin-top: -66px;
+    width: 116px;
+    height: 116px;
+    margin-top: -58px;
     padding: 7px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1304,9 +1303,9 @@ button:focus-visible {
     position: absolute;
     left: 50%;
     top: -6%;
-    width: 64%;
+    width: 44%;
     height: 112%;
-    margin-left: -32%;
+    margin-left: -22%;
     background: linear-gradient(rgba(255, 244, 200, 0.85), rgba(255, 244, 200, 0));
     clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
     transform-origin: 50% 0;
@@ -1320,9 +1319,9 @@ button:focus-visible {
 
 .s-musical .star {
     left: 50%;
-    bottom: 14%;
-    height: 132px;
-    margin-left: -66px;
+    bottom: 12%;
+    height: 116px;
+    margin-left: -58px;
     animation: reel-bow 2s ease-in-out infinite;
 }
 
@@ -1340,8 +1339,8 @@ button:focus-visible {
     box-shadow: 0 0 18px rgba(60, 30, 100, 0.25);
 }
 
-.s-musical .curtain.l { left: 0; transform: translateX(-76%); animation: curtain-l 1.3s cubic-bezier(0.6, 0, 0.3, 1); }
-.s-musical .curtain.r { right: 0; transform: translateX(76%); animation: curtain-r 1.3s cubic-bezier(0.6, 0, 0.3, 1); }
+.s-musical .curtain.l { left: 0; transform: translateX(-70%); animation: curtain-l 1.3s cubic-bezier(0.6, 0, 0.3, 1); }
+.s-musical .curtain.r { right: 0; transform: translateX(70%); animation: curtain-r 1.3s cubic-bezier(0.6, 0, 0.3, 1); }
 
 @keyframes curtain-l { from { transform: translateX(0); } }
 @keyframes curtain-r { from { transform: translateX(0); } }
@@ -1363,7 +1362,7 @@ button:focus-visible {
 @keyframes reel-rise {
     0% { opacity: 0; transform: translateY(0) rotate(-8deg); }
     20% { opacity: 1; }
-    100% { opacity: 0; transform: translateY(-110px) rotate(12deg); }
+    100% { opacity: 0; transform: translateY(-90px) rotate(12deg); }
 }
 
 /* 5. Reading: ideas float out of the book */
@@ -1371,9 +1370,9 @@ button:focus-visible {
 
 .s-reading .book {
     left: 50%;
-    bottom: 18%;
-    height: 92px;
-    margin-left: -88px;
+    bottom: 16%;
+    height: 84px;
+    margin-left: -80px;
     animation: reel-float 3s ease-in-out infinite;
 }
 
@@ -1449,8 +1448,8 @@ button:focus-visible {
 .s-traveling .globe {
     left: 50%;
     top: 50%;
-    height: 128px;
-    margin: -64px 0 0 -72px;
+    height: 112px;
+    margin: -56px 0 0 -63px;
     animation: reel-globe 3.4s ease-in-out infinite;
 }
 
@@ -1470,7 +1469,7 @@ button:focus-visible {
 }
 
 @media (max-width: 768px) {
-    .reel { height: 200px; }
+    .reel { height: 180px; }
     .reel-icon { height: 96px; }
     .s-badminton .racket { height: 84px; }
     .s-hiking .hiker { margin-left: -50px; }
