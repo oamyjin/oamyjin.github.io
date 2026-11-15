@@ -315,7 +315,7 @@
             '<div class="shuttle-x"><div class="shuttle-y"><img class="shuttle" src="' + ICON + 'shuttlecock.png" alt=""></div></div>' +
             '<div class="rally-board"><span class="rally-king"></span><span class="rally-now"></span></div>' +
             '<form class="rally-form" hidden><span class="rally-msg"></span>' +
-                '<input class="rally-name" type="text" maxlength="12" placeholder="你的名字" aria-label="你的名字" autocomplete="off">' +
+                '<input class="rally-name" type="text" maxlength="12" placeholder="Your name" aria-label="Your name" autocomplete="off">' +
                 '<button type="submit">OK</button></form>' +
         '</div>' +
 
@@ -568,7 +568,7 @@
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
-        // 接球王: the longest run of returns in a row, kept in this browser.
+        // Rally King: the longest run of returns in a row, kept in this browser.
         var KEY = 'rally-king';
         var kingEl = scene.querySelector('.rally-king');
         var nowEl = scene.querySelector('.rally-now');
@@ -586,8 +586,8 @@
         }
 
         function render() {
-            kingEl.textContent = '接球王 ' + (best.score ? (best.name || '匿名') + ' · ' + best.score : '虚位以待');
-            nowEl.textContent = play && user ? '连续 ' + streak : '';
+            kingEl.textContent = 'Rally King: ' + (best.score ? (best.name || 'Anonymous') + ' · ' + best.score : 'be the first');
+            nowEl.textContent = play && user ? 'Streak ' + streak : '';
         }
 
         function closeForm() {
@@ -599,7 +599,7 @@
             if (streak > best.score) {
                 best = { name: '', score: streak };
                 save();
-                msgEl.textContent = '新纪录 ' + streak + '!';
+                msgEl.textContent = 'New record: ' + streak + '!';
                 form.hidden = false;
                 scene.classList.add('naming');
             }
