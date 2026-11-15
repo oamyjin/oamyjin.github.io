@@ -313,6 +313,10 @@
             '<img class="reel-icon racket l" src="' + ICON + 'racket.png" alt="">' +
             '<img class="reel-icon racket r" src="' + ICON + 'racket.png" alt="">' +
             '<div class="shuttle-x"><div class="shuttle-y"><img class="shuttle" src="' + ICON + 'shuttlecock.png" alt=""></div></div>' +
+            '<div class="rally-board"><span class="rally-king"></span><span class="rally-now"></span></div>' +
+            '<form class="rally-form" hidden><span class="rally-msg"></span>' +
+                '<input class="rally-name" type="text" maxlength="12" placeholder="你的名字" aria-label="你的名字" autocomplete="off">' +
+                '<button type="submit">OK</button></form>' +
         '</div>' +
 
         '<div class="reel-scene s-hiking">' +
@@ -564,6 +568,58 @@
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
+        // 接球王: the longest run of returns in a row, kept in this browser.
+        var KEY = 'rally-king';
+        var kingEl = scene.querySelector('.rally-king');
+        var nowEl = scene.querySelector('.rally-now');
+        var form = scene.querySelector('.rally-form');
+        var msgEl = form.querySelector('.rally-msg');
+        var nameEl = form.querySelector('.rally-name');
+        var best = { name: '', score: 0 }, streak = 0;
+        try {
+            var saved = JSON.parse(localStorage.getItem(KEY));
+            if (saved && saved.score > 0) best = { name: String(saved.name || '').slice(0, 12), score: Math.floor(saved.score) };
+        } catch (e) {}
+
+        function save() {
+            try { localStorage.setItem(KEY, JSON.stringify(best)); } catch (e) {}
+        }
+
+        function render() {
+            kingEl.textContent = '接球王 ' + (best.score ? (best.name || '匿名') + ' · ' + best.score : '虚位以待');
+            nowEl.textContent = play && user ? '连续 ' + streak : '';
+        }
+
+        function closeForm() {
+            form.hidden = true;
+            scene.classList.remove('naming');
+        }
+
+        function endStreak() {
+            if (streak > best.score) {
+                best = { name: '', score: streak };
+                save();
+                msgEl.textContent = '新纪录 ' + streak + '!';
+                form.hidden = false;
+                scene.classList.add('naming');
+            }
+            streak = 0;
+            render();
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            best.name = nameEl.value.trim().slice(0, 12);
+            save();
+            closeForm();
+            render();
+        });
+        form.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeForm(); });
+        ['pointerdown', 'click'].forEach(function (t) {
+            form.addEventListener(t, function (e) { e.stopPropagation(); });
+        });
+        render();
+
         function local(el, fx, fy) {
             var r = el.getBoundingClientRect(), R = reel.getBoundingClientRect();
             return { x: r.left - R.left + r.width * fx, y: r.top - R.top + r.height * fy };
@@ -605,6 +661,8 @@
                 vx = rk.dir * scale * clamp(430 + Math.abs(rk.hvx) * 0.35, 380, 700);
                 vy = -clamp(340 - rk.hvy * 0.25, 240, 560);
                 lastTouch = now;
+                streak++;
+                render();
             } else {
                 vx = rk.dir * scale * (430 + Math.random() * 90);
                 vy = -(330 + Math.random() * 70);
@@ -615,6 +673,7 @@
         function leave() {
             play = false;
             flight++;
+            endStreak();
             [shEl].concat(rackets.map(function (rk) { return rk.el; })).forEach(function (el) {
                 el.style.transition = 'translate 0.45s ease';
             });
@@ -634,6 +693,7 @@
             if (id !== flight) {           // the scene changed underneath us
                 play = false; user = null;
                 shImg.style.rotate = '';
+                endStreak();
                 return;
             }
             var dt = Math.min((now - last) / 1000, 0.04);
@@ -678,7 +738,7 @@
                         if (now - rk.hitAt < 350) return;
                         if (Math.hypot(sx - rk.hx, sy - rk.hy) < rk.rad + (rk === user ? 10 : 30)) hit(rk, now, scale);
                     });
-                    if (sy > floor) { sy = floor; vx = vy = 0; landed = true; landedAt = now; }
+                    if (sy > floor) { sy = floor; vx = vy = 0; landed = true; landedAt = now; endStreak(); }
                 } else if (now - landedAt > 700) {
                     // serve again from the racket the player is not using
                     var server = rackets[0] === user ? rackets[1] : rackets[0];
@@ -696,7 +756,7 @@
         }
 
         var shDrag = makeDrag(shEl, {
-            onStart: enter,
+            onStart: function () { enter(); endStreak(); },   // picking the shuttlecock up ends the run
             onRelease: function (rvx, rvy) {
                 vx = clamp(rvx, -900, 900);
                 vy = clamp(rvy, -900, 900);
@@ -711,7 +771,7 @@
         rackets.forEach(function (rk) {
             rk.hitAt = 0; rk.hvx = rk.hvy = 0; rk.px = null; rk.hx = rk.hy = 0; rk.rad = 28;
             rk.drag = makeDrag(rk.el, {
-                onStart: function () { enter(); user = rk; },
+                onStart: function () { enter(); user = rk; render(); },
                 onTap: function () {
                     // a tap is a swing; it connects if the shuttlecock is within reach
                     var now = performance.now();
