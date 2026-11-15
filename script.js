@@ -569,7 +569,8 @@
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
         // Rally King: the longest run of returns in a row, kept in this browser.
-        var KEY = 'rally-king';
+        var KEY = 'rally-king-v1';
+        try { localStorage.removeItem('rally-king'); } catch (e) {}   // drop records from local testing
         var kingEl = scene.querySelector('.rally-king');
         var nowEl = scene.querySelector('.rally-now');
         var form = scene.querySelector('.rally-form');
