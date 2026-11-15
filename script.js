@@ -587,7 +587,7 @@
         }
 
         function render() {
-            kingEl.textContent = 'Rally King: ' + (best.score ? (best.name || 'Anonymous') + ' · ' + best.score : 'be the first');
+            kingEl.textContent = 'Rally King 🏆 ' + (best.score ? (best.name || 'Anonymous') + ' · ' + best.score : 'be the first');
             nowEl.textContent = play && user ? 'Streak ' + streak : '';
         }
 
