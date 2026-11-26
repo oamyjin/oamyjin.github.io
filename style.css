@@ -1802,3 +1802,6 @@ button:focus-visible {
 @media (max-width: 768px) {
     .rally-form input { font-size: 16px; width: 84px; }   /* 16px keeps iOS from zooming in */
 }
+
+/* the name prompt already shows the new score, so the record line steps aside for it */
+.s-badminton.naming .rally-board { visibility: hidden; }

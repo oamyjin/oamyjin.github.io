@@ -290,7 +290,8 @@
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var ICON = 'assets/images/icons/';
     var NAMES = ['Badminton', 'Hiking', 'Rubik’s Cube', 'Musicals', 'Reading', 'Traveling'];
-    var HINTS = ['drag to play', 'drag · tap to jump', 'spin · tap the tiles', 'tap for music', 'tap for ideas', 'tap to drop a pin'];
+    var HOVER = !!(window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+    var HINTS = [HOVER ? 'move to play' : 'drag to play', 'drag · tap to jump', 'spin · tap the tiles', 'tap for music', 'tap for ideas', 'tap to drop a pin'];
     var CUBE = ['#f6d27a', '#b9d3a0', '#f4b6b0', '#a9c4ea', '#f2b98a', '#fdf6e8'];
     var PAUSE_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><rect x="2" y="1.5" width="3" height="9" rx="1"/><rect x="7" y="1.5" width="3" height="9" rx="1"/></svg>';
     var PLAY_SVG = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M3 1.6v8.8a.6.6 0 0 0 .9.5l7-4.4a.6.6 0 0 0 0-1L3.9 1.1a.6.6 0 0 0-.9.5z"/></svg>';
@@ -565,6 +566,7 @@
         var play = false, id = 0, last = 0, lastTouch = 0;
         var sx = 0, sy = 0, vx = 0, vy = 0, bx = 0, by = 0;
         var landed = false, landedAt = 0, user = null;
+        var follow = false, mx = 0, my = 0;      // the mouse, in reel coordinates
 
         function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
@@ -577,6 +579,20 @@
         var msgEl = form.querySelector('.rally-msg');
         var nameEl = form.querySelector('.rally-name');
         var best = { name: '', score: 0 }, streak = 0;
+        // The record shared by all visitors: new bests go to a Google Form, and a scheduled
+        // GitHub Action copies the top row of its sheet into assets/data/rally.json.
+        var FORM = { url: '', name: '', score: '' };
+        var world = { name: '', score: 0 };
+
+        function top() { return world.score > best.score ? world : best; }
+
+        function report() {
+            if (!FORM.url || !window.fetch || !window.URLSearchParams) return;
+            var body = new URLSearchParams();
+            body.append(FORM.name, best.name || 'Anonymous');
+            body.append(FORM.score, String(best.score));
+            try { fetch(FORM.url, { method: 'POST', mode: 'no-cors', body: body }).catch(function () {}); } catch (e) {}
+        }
         try {
             var saved = JSON.parse(localStorage.getItem(KEY));
             if (saved && saved.score > 0) best = { name: String(saved.name || '').slice(0, 12), score: Math.floor(saved.score) };
@@ -587,7 +603,8 @@
         }
 
         function render() {
-            kingEl.textContent = 'Rally King 🏆 ' + (best.score ? (best.name || 'Anonymous') + ' · ' + best.score : 'be the first');
+            var t = top();
+            kingEl.textContent = 'Rally King 🏆 ' + (t.score ? (t.name || 'Anonymous') + ' · ' + t.score : 'be the first');
             nowEl.textContent = play && user ? 'Streak ' + streak : '';
         }
 
@@ -597,7 +614,7 @@
         }
 
         function endStreak() {
-            if (streak > best.score) {
+            if (streak > top().score) {
                 best = { name: '', score: streak };
                 save();
                 msgEl.textContent = 'New record: ' + streak + '!';
@@ -612,6 +629,7 @@
             e.preventDefault();
             best.name = nameEl.value.trim().slice(0, 12);
             save();
+            report();
             closeForm();
             render();
         });
@@ -620,6 +638,17 @@
             form.addEventListener(t, function (e) { e.stopPropagation(); });
         });
         render();
+
+        if (window.fetch) {
+            fetch('assets/data/rally.json', { cache: 'no-cache' })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (d) {
+                    if (!d || !(d.score > 0)) return;
+                    world = { name: String(d.name || '').slice(0, 12), score: Math.floor(d.score) };
+                    render();
+                })
+                .catch(function () {});
+        }
 
         function local(el, fx, fy) {
             var r = el.getBoundingClientRect(), R = reel.getBoundingClientRect();
@@ -716,6 +745,14 @@
                 if (rk.drag.isHeld()) { holding = true; lastTouch = now; }
             });
 
+            // with a mouse, the racket on the cursor's side simply follows it (no dragging)
+            if (follow && user && !user.drag.isHeld() && !shDrag.isHeld()) {
+                var gap = 14 * scale;
+                var tx = user.dir > 0 ? Math.min(mx, netX - gap) : Math.max(mx, netX + gap);
+                var up = user.drag.pos();
+                user.drag.raw(up.x + (tx - user.hx), up.y + (clamp(my, 12, floor) - user.hy));
+            }
+
             // the racket nobody is holding stays where it is (it only swings in place)
             rackets.forEach(function (rk) {
                 if (rk === user || rk.drag.isHeld()) return;
@@ -785,6 +822,18 @@
                 }
             });
         });
+
+        scene.addEventListener('pointermove', function (e) {
+            if (e.pointerType !== 'mouse' || !scene.classList.contains('on')) return;
+            if (e.target.closest && e.target.closest('.rally-form')) return;
+            var R = reel.getBoundingClientRect();
+            mx = e.clientX - R.left; my = e.clientY - R.top;
+            var rk = rackets[mx < R.width / 2 ? 0 : 1];
+            follow = true;
+            enter();
+            if (user !== rk) { user = rk; render(); }
+        });
+        scene.addEventListener('pointerleave', function () { follow = false; });
     })();
 
     // 2. Hiking: drag the hiker along the trail; tap to jump.
