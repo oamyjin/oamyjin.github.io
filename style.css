@@ -1806,11 +1806,13 @@ button:focus-visible {
 /* the name prompt already shows the new score, so the record line steps aside for it */
 .s-badminton.naming .rally-board { visibility: hidden; }
 
-/* With a mouse the racket itself is the pointer, so the cursor hides over the court */
+/* With a mouse the racket follows the pointer, so the cursor shrinks to a small green dot */
 @media (hover: hover) and (pointer: fine) {
     .reel .s-badminton,
     .reel .s-badminton .grab,
-    .reel .s-badminton .grab.held { cursor: none; }
+    .reel .s-badminton .grab.held {
+        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Ccircle cx='6' cy='6' r='3.5' fill='%236fae5a' stroke='white' stroke-width='1'/%3E%3C/svg%3E") 6 6, none;
+    }
     .reel .s-badminton .rally-form { cursor: auto; }
     .reel .s-badminton .rally-form button { cursor: pointer; }
 }
