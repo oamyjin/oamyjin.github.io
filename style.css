@@ -1805,3 +1805,12 @@ button:focus-visible {
 
 /* the name prompt already shows the new score, so the record line steps aside for it */
 .s-badminton.naming .rally-board { visibility: hidden; }
+
+/* With a mouse the racket itself is the pointer, so the cursor hides over the court */
+@media (hover: hover) and (pointer: fine) {
+    .reel .s-badminton,
+    .reel .s-badminton .grab,
+    .reel .s-badminton .grab.held { cursor: none; }
+    .reel .s-badminton .rally-form { cursor: auto; }
+    .reel .s-badminton .rally-form button { cursor: pointer; }
+}
